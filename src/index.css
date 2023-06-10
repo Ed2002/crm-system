@@ -1,0 +1,52 @@
+*
+{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body
+{
+  background-color: #ffffff;
+}
+
+:root {
+  --green: #379A3B;
+  --white: #EAEAEA;
+  --blue: #2960A0;
+  --gray: #242424;
+  --orange: #A06229;
+  --black: #000000;
+  --red: #9A2828;
+}
+
+h1
+{
+  font-size: 36px;
+  font-weight: 800;
+}
+
+h2
+{
+  font-size: 32px;
+  font-weight: 600;
+}
+
+h3
+{
+  font-size: 24px;
+  font-weight: 400;
+}
+
+h4
+{
+  font-size: 20px;
+  font-weight: 400;
+}
+
+p
+{
+  font-size: 16px;
+  font-weight: 300;
+}
