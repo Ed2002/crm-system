@@ -13,6 +13,11 @@ import { SelectInput } from "./components/Forms/Select";
 import { InputCheckBox } from "./components/Forms/CheckBox";
 import { TBody, THead, Table, Td, Th, Tr } from "./components/Table";
 import { Card } from "./components/Card";
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 
 function App() {
@@ -25,67 +30,61 @@ function App() {
 
   const menuItems:Array<ItemMenu> = [
     {
-      Icon: <AccountCircleIcon/>,
-      Link: "https://www.w3schools.com/tags/att_a_target.asp",
-      Target: "_blank",
-      Title: "ABC"
+      Icon: <HomeOutlinedIcon/>,
+      Link: "/Home",
+      Target: "_self",
+      Title: "Home"
     },
     {
-      Icon: <AnalyticsIcon/>,
-      Link: "/",
+      Icon: <PersonOutlineIcon/>,
+      Link: "/Client",
       Target: "_self",
-      Title: "ABC"
+      Title: "Users"
+    },
+    {
+      Icon: <AssessmentOutlinedIcon/>,
+      Link: "/Report",
+      Target: "_self",
+      Title: "Reports"
+    },
+    {
+      Icon: <MailOutlineIcon/>,
+      Link: "/Mail",
+      Target: "_self",
+      Title: "Mail Marketing"
+    },
+    {
+      Icon: <FormatListBulletedIcon/>,
+      Link: "/Form",
+      Target: "_self",
+      Title: "Forms"
     }
   ];
 
   return (
     <Menu MenuItems={menuItems}>
-      <Page Title="dasgsa" >
-      <Form onSubmit={handleSubmit} ref={formRef}>
-          <Input variant="filled" name="TesteNome" label="TesteLabel"/>
-          <SelectInput name="TesteSelect" label="TesteLabel">
-            <MenuItem value="TesteValue">TesteMenuItem</MenuItem>
-            <MenuItem value="TesteValue2">TesteMenuItem2</MenuItem>
-          </SelectInput>
-          <InputCheckBox name="TesteCheckBox" label="TesteLabelCheckBox"/>
-          <LoadButton variant="contained" name="TesteLoadButton" title="TesteTitleButton" type="submit"/>
-        </Form>
-
-        <Table>
-          <THead>
-            <tr>
-              <Th>TesteTable</Th>
-            </tr>
-          </THead>
-          <TBody>
-            <Tr>
-              <Td>TesteTBody</Td>
-            </Tr>
-            <Tr>
-              <Td>TesteTBody1</Td>
-            </Tr>
-            <Tr>
-              <Td>TesteTBody2</Td>
-            </Tr>
-            <Tr>
-              <Td>TesteTBody3</Td>
-            </Tr>
-            <Tr>
-              <Td>TesteTBody4</Td>
-            </Tr>
-          </TBody>
-        </Table>
+      <Page Title="Project X">
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Card style={{ flex: '1', marginRight: '10px' }}>
+            <h3>Novos Clientes Cadastrados</h3>
+          </Card>
+  
+          <Card style={{ flex: '1', marginRight: '10px' }}>
+            <h3>Clientes Aguardando Atendimento</h3>
+          </Card>
+  
+          <Card style={{ flex: '1' }}>
+            <h3>Finalizados</h3>
+          </Card>
+        </div>
 
         <Card>
-          <h1>TesteCard</h1>
-          <h2>TesteCard</h2>
-          <h3>TesteCard</h3>
-          <h4>TesteCard</h4>
-          <p>TesteCard</p>
+          <h1>Relatório Aqui</h1>
         </Card>
+
       </Page>
     </Menu>
-  )
+  )  
 }
 
 export default App
