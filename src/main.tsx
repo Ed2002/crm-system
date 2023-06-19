@@ -11,11 +11,16 @@ import { Forms } from './Views/Forms.tsx';
 import { Report } from './Views/Report.tsx';
 import { Mail } from './Views/Mail.tsx';
 import Home from './Views/Home.tsx';
+import { Menu } from './Views/Menu.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home/>,
+    element: (
+      <Menu>
+        <Home/>
+      </Menu>
+    ),
   },
   {
     path: "/Login",
@@ -23,7 +28,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/Client",
-    element: <Client/>,
+    element: (
+      <Menu>
+        <Client/>
+      </Menu>
+    ),
   },
   {
     path: "/Form",
