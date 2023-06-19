@@ -35,16 +35,28 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Form",
-    element: <Forms/>,
+    path: "/Forms",
+    element: (
+      <Menu>
+        <Forms/>
+      </Menu>
+    ),
   },
   {
     path: "/Report",
-    element: <Report/>,
+    element: (
+      <Menu>
+        <Report/>
+      </Menu>
+    ),
   },
   {
     path: "/Mail",
-    element: <Mail/>,
+    element: (
+      <Menu>
+        <Mail/>
+      </Menu>
+    ),
   },
 ]);
 

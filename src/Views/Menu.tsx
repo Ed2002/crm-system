@@ -40,7 +40,7 @@ export const Menu = ({children}:IMenu) => {
         },
         {
           Icon: <FormatListBulletedIcon/>,
-          Link: "/Form",
+          Link: "/Forms",
           Target: "_self",
           Title: "Forms"
         }
