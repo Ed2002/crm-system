@@ -1,18 +1,7 @@
-import { Menu } from "./components/Menu"
-import { ItemMenu } from "./components/Menu/types"
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Page } from "./components/Page";
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { useRef } from "react";
-import { FormHandles } from "@unform/core";
-import { Form } from "@unform/web";
-import { Input } from "./components/Forms/Input";
-import { LoadButton } from "./components/Buttons/LoadButton";
-import { MenuItem } from "@mui/material";
-import { SelectInput } from "./components/Forms/Select";
-import { InputCheckBox } from "./components/Forms/CheckBox";
-import { TBody, THead, Table, Td, Th, Tr } from "./components/Table";
-import { Card } from "./components/Card";
+import { Menu } from "../components/Menu"
+import { ItemMenu } from "../components/Menu/types"
+import { Page } from "../components/Page";
+import { Card } from "../components/Card";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
@@ -20,18 +9,12 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 
-function App() {
-
-  const formRef = useRef<FormHandles>(null);
-  
-  function handleSubmit(data: any) {
-    console.log(data)
-  }
+function Home() {
 
   const menuItems:Array<ItemMenu> = [
     {
       Icon: <HomeOutlinedIcon/>,
-      Link: "/Home",
+      Link: "/",
       Target: "_self",
       Title: "Home"
     },
@@ -87,4 +70,4 @@ function App() {
   )  
 }
 
-export default App
+export default Home;

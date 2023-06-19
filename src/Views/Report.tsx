@@ -1,7 +1,7 @@
 export const Report = () => {
     return (
         <div>
-            <h1>Mail</h1>
+            <h1>Report</h1>
         </div>
     )
 };
