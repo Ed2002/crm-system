@@ -24,6 +24,7 @@ export const Client = () => {
     return (
         <div>
             <h1>Client</h1>
+            <p>{import.meta.env.VITE_TESTE}</p>
         </div>
     )
 };
