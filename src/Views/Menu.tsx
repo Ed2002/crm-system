@@ -15,34 +15,34 @@ export const Menu = ({children}:IMenu) => {
 
     const menuItems:Array<ItemMenu> = [
         {
-          Icon: <HomeOutlinedIcon/>,
+          Icon: <HomeOutlinedIcon sx={{ fontSize: 30 }}/>,
           Link: "/",
           Target: "_self",
           Title: "Home"
         },
         {
-          Icon: <PersonOutlineIcon/>,
+          Icon: <PersonOutlineIcon sx={{ fontSize: 30 }}/>,
           Link: "/Client",
           Target: "_self",
-          Title: "Users"
+          Title: "Usuários"
         },
         {
-          Icon: <AssessmentOutlinedIcon/>,
+          Icon: <AssessmentOutlinedIcon sx={{ fontSize: 30 }}/>,
           Link: "/Report",
           Target: "_self",
-          Title: "Reports"
+          Title: "Relatórios"
         },
         {
-          Icon: <MailOutlineIcon/>,
+          Icon: <MailOutlineIcon sx={{ fontSize: 30 }}/>,
           Link: "/Mail",
           Target: "_self",
           Title: "Mail Marketing"
         },
         {
-          Icon: <FormatListBulletedIcon/>,
+          Icon: <FormatListBulletedIcon sx={{ fontSize: 30 }}/>,
           Link: "/Forms",
           Target: "_self",
-          Title: "Forms"
+          Title: "Formulários"
         }
       ];
     
