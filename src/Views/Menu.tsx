@@ -5,6 +5,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { Menu as MenuComponent } from "../components/Menu"
 import { ItemMenu } from "../components/Menu/types"
+import { SnackbarProvider } from 'notistack';
 
 interface IMenu {
     children: React.ReactNode;
@@ -50,8 +51,11 @@ export const Menu = ({children}:IMenu) => {
 
 
     return (
-        <MenuComponent MenuItems={menuItems}>
-        {children} 
-        </MenuComponent>
+      
+      <MenuComponent MenuItems={menuItems}>
+        <SnackbarProvider>
+          {children} 
+        </SnackbarProvider>
+      </MenuComponent>
     );
 }

@@ -6,18 +6,28 @@ import { Input } from "../components/Forms/Input";
 import { TBody, THead, Table, Td, Th, Tr } from "../components/Table";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
+import { useSnackbar, enqueueSnackbar } from 'notistack';
 import { SelectInput } from "../components/Forms/Select";
 import { MenuItem } from "@mui/material";
 
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   function teste() {
     API.get('https://jsonplaceholder.typicode.com/todos/1')
       .then(({data}) => {
+        enqueueSnackbar({
+           message: 'Requisição API feita com sucesso',
+           variant: "success" 
+        });
         console.log(data);
       })
       .catch(err => {
+        enqueueSnackbar({
+            message: 'Erro na requisição API',
+            variant: "success" 
+         });
         console.log(err);
       })
   };
@@ -26,9 +36,17 @@ export const Client = () => {
     const exhttp = () => {
       API.get('https://jsonplaceholder.typicode.com/todos/1')
         .then(({data}) => {
+          enqueueSnackbar({
+            message: 'Requisição API feita com sucesso',
+            variant: "success" 
+          });
           console.log(data);
         })
         .catch(err => {
+          enqueueSnackbar({
+            message: 'Erro na requisição API',
+            variant: "success" 
+          });
           console.log(err);
         })
     }
@@ -42,7 +60,7 @@ export const Client = () => {
   return (
     <Page Title="Clientes">
       <div style={{ margin: '20px 0' }}>
-        <Form ref={formRef} onSubmit={handleSubmit} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
           <Input name="name" label="Nome" variant="outlined" style={{ width: '500px' }}/>
           <Input name="email" label="E-mail" variant="outlined" style={{ width: '500px' }}/>
           <Input name="status" label="Status" variant="outlined" style={{ width: '300px' }}/>
