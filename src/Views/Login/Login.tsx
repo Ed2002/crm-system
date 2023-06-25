@@ -58,10 +58,10 @@ export const Login = () => {
                         padding: 4
                     }}>
                         <Grid item xs={12}>
-                            <Input name='email' variant='outlined' placeholder='E-mail' type='email' label="E-mail" fullWidth/>
+                            <Input name='email' required variant='outlined' placeholder='E-mail' type='email' label="E-mail" fullWidth/>
                         </Grid>
                         <Grid item xs={12}>
-                            <Input name='senha' variant='outlined' placeholder='Senha' type='password' label="Senha" fullWidth/>
+                            <Input name='senha' required variant='outlined' placeholder='Senha' type='password' label="Senha" fullWidth/>
                         </Grid>
                         <Grid item xs={12}>
                             <LoadButton size='large' variant='contained' type='submit' title='Login' name='loginbtn' fullWidth/>
