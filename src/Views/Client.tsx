@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API } from "../services/axios";
 import { Page } from "../components/Page";
 import { LoadButton } from "../components/Buttons/LoadButton";
@@ -8,7 +8,9 @@ import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { useSnackbar, enqueueSnackbar } from 'notistack';
 import { SelectInput } from "../components/Forms/Select";
-import { MenuItem } from "@mui/material";
+import { Grid, IconButton, MenuItem } from "@mui/material";
+import { Modal } from "../components/Modal";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
@@ -57,17 +59,47 @@ export const Client = () => {
     console.log(data);
   }
 
+  const [ModalTeste, SetModalTeste] = useState<boolean>(false);
+  
+  const handleOpenModal = () => {
+    SetModalTeste(true);
+  };
+  const handleCloseModal = () => {
+    SetModalTeste(false);
+  };
+
   return (
+
     <Page Title="Clientes">
-      <div style={{ margin: '20px 0' }}>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <Input name="name" label="Nome" variant="outlined" style={{ width: '500px' }}/>
-          <Input name="email" label="E-mail" variant="outlined" style={{ width: '500px' }}/>
-          <Input name="status" label="Status" variant="outlined" style={{ width: '300px' }}/>
-          <LoadButton variant="contained" name="submit" title="Pesquisar" type="submit" style={{ height: '50px' }}/>
-          <LoadButton variant="outlined" name="submit" title="Cadastrar" type="submit" style={{ height: '50px' }}/>
-        </Form>
-      </div>
+      <Form ref={formRef} onSubmit={handleSubmit}>
+        <Grid container spacing={1}
+            sx={{
+              '& > :not(style)': { marginTop: '16px' },
+            }}>
+          <Grid item xs={4}>
+            <Input name="name" label="Nome" variant="outlined" fullWidth/>
+          </Grid>
+          <Grid item xs={4}>
+            <Input name="email" label="E-mail" variant="outlined" fullWidth/>
+          </Grid>
+          <Grid item xs={2}>
+            <SelectInput name="status" label="Status" variant="outlined" fullWidth>
+              <MenuItem value="true">Ativo</MenuItem>
+              <MenuItem value="false">Inativo</MenuItem>
+            </SelectInput>
+          </Grid>
+          <Grid item xs={1}>
+            <LoadButton variant="contained" name="submit" title="Pesquisar" type="submit" fullWidth style={{height:"54px"}}/>
+          </Grid>
+          <Grid item xs={1}>
+            <LoadButton variant="outlined" name="cadastrar" title="Cadastrar" type="button" onClick={handleOpenModal} fullWidth style={{height:"54px"}}/>
+          </Grid>
+        </Grid>
+      </Form>
+
+      <Modal Title="Cadastro de Clietes" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth >
+        <p>Fzer</p>
+      </Modal>
 
       <Table style={{ marginTop: '40px'}}>
         <THead>
@@ -85,7 +117,7 @@ export const Client = () => {
             <Td>Teste1</Td>
             <Td>Teste1</Td>
             <Td>Teste1</Td>
-            <Td><LoadButton variant="contained" name="submit" title="{}" type="submit"/></Td>
+            <Td><IconButton aria-label="delete" size="small"> <MoreVertIcon fontSize="inherit" style={{color:"green"}}/></IconButton></Td>
           </Tr>
         </TBody>
       </Table>
