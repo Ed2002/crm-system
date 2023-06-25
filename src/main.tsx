@@ -5,13 +5,15 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { Login } from './Views/Login.tsx';
+import { Login } from './Views/Login/Login.tsx';
 import { Client } from './Views/Client.tsx';
 import { Forms } from './Views/Forms.tsx';
 import { Report } from './Views/Report.tsx';
 import { Mail } from './Views/Mail.tsx';
 import Home from './Views/Home.tsx';
 import { Menu } from './Views/Menu.tsx';
+import { SnackbarProvider } from 'notistack';
+import { AuthProvider } from './services/auth_provider.tsx';
 
 const router = createBrowserRouter([
   {
@@ -24,7 +26,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/Login",
-    element: <Login/>,
+    element: (
+    <SnackbarProvider>
+      <Login/>
+      <AuthProvider/>
+    </SnackbarProvider>
+    ),
   },
   {
     path: "/Client",

@@ -6,6 +6,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { Menu as MenuComponent } from "../components/Menu"
 import { ItemMenu } from "../components/Menu/types"
 import { SnackbarProvider } from 'notistack';
+import { AuthProvider } from '../services/auth_provider';
 
 interface IMenu {
     children: React.ReactNode;
@@ -51,11 +52,11 @@ export const Menu = ({children}:IMenu) => {
 
 
     return (
-      
-      <MenuComponent MenuItems={menuItems}>
-        <SnackbarProvider>
-          {children} 
-        </SnackbarProvider>
-      </MenuComponent>
+        <MenuComponent MenuItems={menuItems}>
+          <SnackbarProvider>
+            {children} 
+          </SnackbarProvider>
+          <AuthProvider/>
+        </MenuComponent>
     );
 }
