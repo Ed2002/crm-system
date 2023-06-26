@@ -13,6 +13,9 @@ export const ErroPage = () => {
                 <Grid item xs={12} className="center">
                     <img src={erro} alt="erro-404"/>
                 </Grid>
+                <Grid item xs={12} className="center" sx={{marginTop: -10}}>
+                    <a href="https://storyset.com/technology">Technology illustrations by Storyset</a>
+                </Grid>
                 <Grid item xs={12} className="center">
                     <h2>Oops...</h2>
                 </Grid>
