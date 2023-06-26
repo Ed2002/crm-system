@@ -14,6 +14,8 @@ import Home from './Views/Home.tsx';
 import { Menu } from './Views/Menu.tsx';
 import { SnackbarProvider } from 'notistack';
 import { AuthProvider } from './services/auth_provider.tsx';
+import { Register } from './Views/Register/Register.tsx';
+import { User } from './Views/User/User.tsx';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,24 @@ const router = createBrowserRouter([
     element: (
     <SnackbarProvider>
       <Login/>
+      <AuthProvider/>
+    </SnackbarProvider>
+    ),
+  },
+  {
+    path: "/User/:userId",
+    element: (
+    <SnackbarProvider>
+      <User/>
+      <AuthProvider/>
+    </SnackbarProvider>
+    ),
+  },
+  {
+    path: "/Register",
+    element: (
+    <SnackbarProvider>
+      <Register/>
       <AuthProvider/>
     </SnackbarProvider>
     ),

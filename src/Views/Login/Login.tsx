@@ -21,26 +21,29 @@ export const Login = () => {
             password: data.senha
         }).then(response => {
             var res = response.data;
-            console.log(res);
-            if(res.success)
-            {
+            if(res.success) {
                 SaveToken(res.model);
                 enqueueSnackbar({
                     message: 'Login realizado com sucesso!',
                     variant: "success"
-                 });
-                 setTimeout(()=>{
+                });
+                setTimeout(()=>{
                     navigate("/");
-                 },2000);
+                },2000);
             }
             else
             {
                 enqueueSnackbar({
-                    message: res.model,
-                    variant: "error" 
+                    message: res.menssages[0],
+                    variant: "success"
                 });
             }
-        })
+        }).catch(error => {
+            enqueueSnackbar({
+                message: "Erro em nosso servidor tente mais tarde!",
+                variant: 'warning'
+            })
+        });
     };
 
     return (
@@ -67,7 +70,7 @@ export const Login = () => {
                             <LoadButton size='large' variant='contained' type='submit' title='Login' name='loginbtn' fullWidth/>
                         </Grid>
                         <Grid item xs={12}>
-                            <LoadButton size='large' variant='outlined' type='button' title='Cadastrar' name='cadastrarbtn' fullWidth/>
+                            <LoadButton size='large' onClick={()=>{navigate("/Register")}} variant='outlined' type='button' title='Cadastrar' name='cadastrarbtn' fullWidth/>
                         </Grid>
                     </Grid>
                 </Form>

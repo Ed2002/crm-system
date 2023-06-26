@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { VerifyToken } from "./auth";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useSnackbar } from "notistack";
 
 export const AuthProvider = () => {
@@ -26,13 +24,16 @@ export const AuthProvider = () => {
             }
             else
             {
-                enqueueSnackbar({
-                    message: "Faça o login",
-                    variant: "error"
-                });
-                setTimeout(()=>{
-                    navigate("/login");
-                },2000);
+                if(window.location.pathname !== "/Register")
+                {
+                    enqueueSnackbar({
+                        message: "Faça o login",
+                        variant: "error"
+                    });
+                    setTimeout(()=>{
+                        navigate("/Login");
+                    },2000);
+                }
             }
         }
         return () => handleAuth();
