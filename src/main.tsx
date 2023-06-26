@@ -16,6 +16,7 @@ import { SnackbarProvider } from 'notistack';
 import { AuthProvider } from './services/auth_provider.tsx';
 import { Register } from './Views/Register.tsx';
 import { User } from './Views/User.tsx';
+import {ErroPage} from './Views/ErroPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
         <Home/>
       </Menu>
     ),
+    errorElement: <ErroPage/>
   },
   {
     path: "/Login",
@@ -40,9 +42,9 @@ const router = createBrowserRouter([
     element: (
     <SnackbarProvider>
       <User/>
-      <AuthProvider/>
     </SnackbarProvider>
     ),
+    errorElement: <ErroPage/>
   },
   {
     path: "/Register",
