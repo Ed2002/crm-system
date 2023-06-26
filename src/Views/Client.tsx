@@ -97,8 +97,26 @@ export const Client = () => {
         </Grid>
       </Form>
 
-      <Modal Title="Cadastro de Clietes" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth >
-        <p>Fzer</p>
+      <Modal Title="Cadastro de Clietes" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item xs={11}>
+              <Input name="name" label="Nome" variant="outlined" fullWidth/>
+            </Grid>
+            <Grid item xs={11}>
+              <Input name="email" label="E-mail" variant="outlined" fullWidth/>
+            </Grid>
+            <Grid item xs={11}>
+              <Input name="phone" label="Telefone" variant="outlined" fullWidth/>
+            </Grid>
+            <Grid item xs={11}>
+              <Input name="document" label="CPF" variant="outlined" fullWidth/>
+            </Grid>
+            <Grid item xs={11} style={{ marginBottom: '30px' }}>
+              <LoadButton variant="contained" name="submit" title="Cadastrar" type="submit" fullWidth style={{height:"54px"}}/>
+            </Grid>
+          </Grid>
+        </Form>
       </Modal>
 
       <Table style={{ marginTop: '40px'}}>

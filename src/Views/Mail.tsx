@@ -78,8 +78,23 @@ export const Mail = () => {
         </Grid>
       </Form>
 
-      <Modal Title="Cadastro de Clietes" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth >
-        <p>Fazer</p>
+      <Modal Title="Envio de E-mails" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item xs={11}>
+              <Input name="email" label="E-mail" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={11}>
+              <Input name="about" label="Assunto" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={11}>
+              <Input name="data" label="Conteúdo" variant="outlined" fullWidth multiline rows={5} />
+            </Grid>
+            <Grid item xs={11} style={{ marginBottom: '30px' }}>
+              <LoadButton variant="contained" name="submit" title="Enviar" type="submit" fullWidth style={{ height: "54px" }} />
+            </Grid>
+          </Grid>
+        </Form>
       </Modal>
 
       <Table style={{ marginTop: '40px'}}>
