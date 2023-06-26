@@ -1,14 +1,13 @@
 import { Grid, Paper } from '@mui/material';
-import './index.css'
 import { useEffect, useRef } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { Input } from '../../components/Forms/Input';
-import { LoadButton } from '../../components/Buttons/LoadButton';
-import { LoginType } from '../../types/logintype';
-import { API } from '../../services/axios';
+import { Input } from '../components/Forms/Input';
+import { LoadButton } from '../components/Buttons/LoadButton';
+import { LoginType } from '../types/logintype';
+import { API } from '../services/axios';
 import { useSnackbar } from 'notistack';
-import { SaveToken, VerifyToken } from '../../services/auth';
+import { SaveToken, VerifyToken } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 export const Login = () => {
     const formRef = useRef<FormHandles>(null);
@@ -47,8 +46,8 @@ export const Login = () => {
     };
 
     return (
-        <div className='LoginPage'>
-            <Paper variant='elevation' elevation={16} className='LoginCard'>
+        <div className='gradient'>
+            <Paper variant='elevation' elevation={16} className='center-card'>
                 <Grid container spacing={2} sx={{
                     padding: 1,
                 }}>

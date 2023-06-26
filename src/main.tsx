@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { Login } from './Views/Login/Login.tsx';
+import { Login } from './Views/Login.tsx';
 import { Client } from './Views/Client.tsx';
 import { Forms } from './Views/Forms.tsx';
 import { Report } from './Views/Report.tsx';
@@ -14,8 +14,8 @@ import Home from './Views/Home.tsx';
 import { Menu } from './Views/Menu.tsx';
 import { SnackbarProvider } from 'notistack';
 import { AuthProvider } from './services/auth_provider.tsx';
-import { Register } from './Views/Register/Register.tsx';
-import { User } from './Views/User/User.tsx';
+import { Register } from './Views/Register.tsx';
+import { User } from './Views/User.tsx';
 
 const router = createBrowserRouter([
   {

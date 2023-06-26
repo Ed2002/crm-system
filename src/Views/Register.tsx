@@ -1,17 +1,16 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { LoadButton } from "../../components/Buttons/LoadButton";
-import { Input } from "../../components/Forms/Input";
+import { LoadButton } from "../components/Buttons/LoadButton";
+import { Input } from "../components/Forms/Input";
 import { Form } from '@unform/web';
 import { useRef } from "react";
 import { FormHandles } from "@unform/core";
-import './index.css';
-import { RegisterType } from "../../types/registertype";
+import { RegisterType } from "../types/registertype";
 import * as Yup from 'yup';
-import { API } from "../../services/axios";
+import { API } from "../services/axios";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { SaveToken } from "../../services/auth";
+import { SaveToken } from "../services/auth";
 
 export const Register = () => {
     const formRef = useRef<FormHandles>(null);
@@ -86,8 +85,8 @@ export const Register = () => {
 
 
     return (
-        <div className='RegisterPage'>
-            <Paper variant='elevation' elevation={16} className='RegisterCard'>
+        <div className='gradient'>
+            <Paper variant='elevation' elevation={16} className='center-card'>
                 <Grid container spacing={2} sx={{
                     padding: 1,
                 }}>
