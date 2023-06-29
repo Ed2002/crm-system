@@ -23,7 +23,7 @@ export const ErroPage = () => {
                     <p><i>{error.statusText || error.message}</i></p>
                 </Grid>
                 <Grid item xs={12} className="center">
-                    <LoadButton title="Voltar para a página inicial" onClick={()=>{navigate("/")}}/>
+                    <LoadButton title="Voltar para a página inicial" onClick={() => { navigate("/"); } } name={""}/>
                 </Grid>
             </Grid>
         </>
