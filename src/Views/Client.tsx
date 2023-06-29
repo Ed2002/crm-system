@@ -12,11 +12,27 @@ import { Grid, IconButton, MenuItem } from "@mui/material";
 import { Modal } from "../components/Modal";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
   const { enqueueSnackbar } = useSnackbar();
+  const [clients, setClients] = useState([]);
 
-  function teste() {
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await API.get("https://localhost:7182/api/ClientCrm");
+        setClients(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchClients();
+  }, []);
+  
+
+  /*function teste() {
     API.get('https://jsonplaceholder.typicode.com/todos/1')
       .then(({data}) => {
         enqueueSnackbar({
@@ -32,11 +48,11 @@ export const Client = () => {
          });
         console.log(err);
       })
-  };
+  };*/
 
   useEffect(() => {
     const exhttp = () => {
-      API.get('https://jsonplaceholder.typicode.com/todos/1')
+      API.get('https://localhost:7182/api/ClientCrm')
         .then(({data}) => {
           enqueueSnackbar({
             message: 'Requisição API feita com sucesso',
@@ -130,14 +146,21 @@ export const Client = () => {
           </tr>
         </THead>
         <TBody>
-          <Tr>
-            <Td>Teste1</Td>
-            <Td>Teste1</Td>
-            <Td>Teste1</Td>
-            <Td>Teste1</Td>
-            <Td><IconButton aria-label="delete" size="small"> <MoreVertIcon fontSize="inherit" style={{color:"green"}}/></IconButton></Td>
-          </Tr>
+          {clients.map((client) => (
+            <Tr key={client.id}>
+              <Td>{client.name}</Td>
+              <Td>{client.email}</Td>
+              <Td>{client.phone}</Td>
+              <Td>{client.status}</Td>
+              <Td>
+              <IconButton aria-label="delete" size="small">
+                <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
+              </IconButton>
+              </Td>
+            </Tr>
+          ))}
         </TBody>
+
       </Table>
     </Page>
   )
