@@ -51,22 +51,19 @@ export const Mail = () => {
   };
 
   return (
-    <Page Title="E-mails">
+    <Page Title="E-mail Templates">
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Grid container spacing={1}
             sx={{
               '& > :not(style)': { marginTop: '16px' },
             }}>
-          <Grid item xs={4}>
-            <Input name="name" label="Título" variant="outlined" fullWidth/>
-          </Grid>
-          <Grid item xs={4}>
-            <Input name="email" label="E-mail" variant="outlined" fullWidth/>
+          <Grid item xs={8}>
+            <Input name="title" label="Título" variant="outlined" fullWidth/>
           </Grid>
           <Grid item xs={2}>
             <SelectInput name="status" label="Status" variant="outlined" fullWidth>
-              <MenuItem value="true">Enviado</MenuItem>
-              <MenuItem value="false">Não Enviado</MenuItem>
+              <MenuItem value="true">Ativo</MenuItem>
+              <MenuItem value="false">Inativo</MenuItem>
             </SelectInput>
           </Grid>
           <Grid item xs={1}>
@@ -82,10 +79,7 @@ export const Mail = () => {
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Grid container spacing={2} justifyContent="center" alignItems="center">
             <Grid item xs={11}>
-              <Input name="email" label="E-mail" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={11}>
-              <Input name="about" label="Assunto" variant="outlined" fullWidth />
+              <Input name="title" label="Título" variant="outlined" fullWidth />
             </Grid>
             <Grid item xs={11}>
               <Input name="data" label="Conteúdo" variant="outlined" fullWidth multiline rows={5} />
@@ -100,15 +94,13 @@ export const Mail = () => {
       <Table style={{ marginTop: '40px'}}>
         <THead>
           <tr style={{textAlign: "left"}}>
-            <Th>Nome</Th>
-            <Th>E-mail</Th>
+            <Th>Título</Th>
             <Th>Status</Th>
             <Th>Ações</Th>
           </tr>
         </THead>
         <TBody>
           <Tr>
-            <Td>Teste1</Td>
             <Td>Teste1</Td>
             <Td>Teste1</Td>
             <Td><IconButton aria-label="delete" size="small"> <MoreVertIcon fontSize="inherit" style={{color:"green"}}/></IconButton></Td>

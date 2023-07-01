@@ -42,7 +42,7 @@ export const Client = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await API.get("https://localhost:7182/api/ClientCrm");
+        const response = await API.get("/ClientCrm");
         setClients(response.data);
       } catch (error) {
         console.log(error);
@@ -83,30 +83,27 @@ export const Client = () => {
     setClients(filteredClients);
   }  
   
-  function handleSubmit(data: any) {
-    const newClient = {
-      id: clients.length + 1,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      document: data.document,
-      status: "Ativo",
-    };
+  async function handleSubmit(data: any) {
+    try {
+      const response = await API.post("/ClientCrm", data);
+      const newClient: Client = response.data;
+      
+      setClients([...clients, newClient]);
   
-    setClients([...clients, newClient]);
+      enqueueSnackbar("Cliente cadastrado com sucesso!", { variant: "success" });
   
-    enqueueSnackbar("Cliente cadastrado com sucesso!", { variant: "success" });
-  
-    setRegistrationFormData({
-      name: '',
-      email: '',
-      phone: '',
-      document: '',
-    });
+      setRegistrationFormData({
+        name: '',
+        email: '',
+        phone: '',
+        document: '',
+      });
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar("Erro ao cadastrar cliente!", { variant: "error" });
+    }
   }
   
-
-
   return (
     <Page Title="Clientes">
       <Form ref={formSearchRef} onSubmit={handleSearch}>
