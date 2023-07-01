@@ -43,6 +43,7 @@ const router = createBrowserRouter([
     element: (
     <SnackbarProvider>
       <User/>
+      <AuthProvider/>
     </SnackbarProvider>
     ),
     errorElement: <ErroPage/>

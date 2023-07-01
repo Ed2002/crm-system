@@ -6,12 +6,38 @@ import Chip from '@mui/material/Chip';
 import { FormHandles } from "@unform/core";
 import { Form } from '@unform/web';
 import { Input } from "../components/Forms/Input/index";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LoadButton } from "../components/Buttons/LoadButton/index";
+import { API } from "../services/axios";
+import { GetToken } from "../services/auth";
+import { useParams } from "react-router-dom";
 
 export const User = () => {
+    const { userId } = useParams();
     const formRef = useRef<FormHandles>(null);
     const [Change,SetChange] = useState<boolean>(true);
+
+    useEffect(()=>{
+        const callUserData = () => {
+            API.get(`${import.meta.env.VITE_API_URL}User`,{
+                params:{
+                    "PageSize": 10,
+                    "Page":1,
+                    "Id": userId
+                },
+                headers:{
+                    Authorization: `Bearer ${GetToken()}`
+                }
+            }).then(response => {
+                console.log(response);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        return () => callUserData();
+    },[]);
+
     return (
         <div className="gradient">
             <Page Title="Olá Eduardo">
@@ -28,7 +54,7 @@ export const User = () => {
                     <Form ref={formRef} onSubmit={()=>{}}>
                         <Input name="email" value="ed@mail.com" label="E-mail" disabled={Change} type="email" fullWidth sx={{marginTop: 4}}/>
                         <Input name="telefone" value="(47) 9 9999-9999" label="Telefone" disabled={Change} type="tel" fullWidth sx={{marginTop: 4}}/>
-                        <LoadButton title="Alterar Dados" onClick={()=>{SetChange(!Change)}}/>
+                        <LoadButton name="my-btn" title="Alterar Dados" onClick={()=>{SetChange(!Change)}}/>
                     </Form>
                 </Stack>
             </Page>
