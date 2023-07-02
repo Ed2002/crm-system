@@ -22,7 +22,7 @@ export const Client = () => {
     email: string;
     phone: string;
     document: string;
-    status: string;
+    status: number;
   }
 
   const [clients, setClients] = useState<Client[]>([]);
@@ -150,8 +150,9 @@ export const Client = () => {
               }
             >
               <MenuItem value="">Todos</MenuItem>
-              <MenuItem value="true">Ativo</MenuItem>
-              <MenuItem value="false">Inativo</MenuItem>
+              <MenuItem value="true">Atendido</MenuItem>
+              <MenuItem value="false">Em Atendimento</MenuItem>
+              <MenuItem value="false">Não Atendido</MenuItem>
             </SelectInput>
           </Grid>
           <Grid item xs={1}>

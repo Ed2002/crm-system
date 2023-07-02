@@ -21,6 +21,12 @@ import {Project} from './Views/Project.tsx';
 
 const router = createBrowserRouter([
   {
+    path: "/Project",
+    element: (
+        <Project/>
+    ),
+  },
+  {
     path: "/",
     element: (
       <Menu>
@@ -55,12 +61,6 @@ const router = createBrowserRouter([
       <Register/>
       <AuthProvider/>
     </SnackbarProvider>
-    ),
-  },
-  {
-    path: "/Project",
-    element: (
-        <Project/>
     ),
   },
   {

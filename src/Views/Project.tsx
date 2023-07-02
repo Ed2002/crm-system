@@ -102,6 +102,9 @@ export const Project = () => {
                 }}
                 aria-label="ArrowForwardIcon"
                 size="small"
+                onClick={() => {
+                  window.location.href = '/';
+              }}
               >
                 <ArrowForwardIcon fontSize="inherit" style={{ color: "green" }} />
               </IconButton>
