@@ -89,7 +89,7 @@ export const Project = () => {
           </Grid>
         </Grid>
 
-        <Grid container sx={{marginTop: 8}} className="background-gradient">
+        <Grid container sx={{marginTop: 8, position: 'fixed', bottom: 0}} className="background-gradient">
           <Grid item xs={12} textAlign="center">
             <p style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.46)', marginBottom: '16px', fontSize: '20px', fontWeight: 'bold', color: 'white' }}>2023 - CRM</p>
           </Grid> 
