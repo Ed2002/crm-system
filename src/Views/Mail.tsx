@@ -10,32 +10,49 @@ import { SelectInput } from "../components/Forms/Select";
 import { Grid, IconButton, MenuItem } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Modal } from "../components/Modal";
+import * as Yup from 'yup';
+import { GetAuthToken, GetToken } from "../services/auth";
+import { enqueueSnackbar } from "notistack";
 
 export const Mail = () => {
   const formRef = useRef<FormHandles>(null);
+    const [Change,SetChange] = useState<boolean>(true);
+    const [MailTemplates,SetMailTemplates] = useState<Array<MailTemplateType>>([]);
+    const [Search,SetSearch] = useState<boolean>(true);
 
-  function teste() {
-    API.get('https://jsonplaceholder.typicode.com/todos/1')
-      .then(({data}) => {
-        console.log(data);
+    const callMailTemplateData = () => {
+      API.get(`${import.meta.env.VITE_API_URL}MailTemplate`,{
+          params:{
+              "PageSize": 10,
+              "Page":1,
+              "Id": Number(GetAuthToken()?.sub)
+          },
+          headers:{
+              Authorization: `Bearer ${GetToken()}`
+          }
+      }).then(response => {
+          let {data} = response;
+          if(data.success)
+          {
+              console.log(data.model.values[0]);
+              SetMailTemplates(data.model.values[0]);
+              SetSearch(false);
+          }
+          else
+          {
+              enqueueSnackbar({
+                  message: data.menssages[0],
+                  variant: 'error'
+              })
+          }
       })
       .catch(err => {
-        console.log(err);
-      })
-  };
-
-  useEffect(() => {
-    const exhttp = () => {
-      API.get('https://jsonplaceholder.typicode.com/todos/1')
-        .then(({data}) => {
-          console.log(data);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    }
-    return () => exhttp();
-  }, []);
+          enqueueSnackbar({
+              message: "Erro na criação do template!",
+              variant: 'warning'
+          })
+      });
+  }
 
   function handleSubmit(data: any) {
     console.log(data);
@@ -49,6 +66,60 @@ export const Mail = () => {
   const handleCloseModal = () => {
     SetModalTeste(false);
   };
+
+  const handleCreate = async (data:MailTemplateType) => {
+    try
+    {
+        const schema = Yup.object().shape({
+            data: Yup.string().required("O conteúdo é obrigatório"),
+        })
+
+        await schema.validate(data, {
+            abortEarly: false,
+          });
+
+          data.status = 1;
+
+        API.post(`${import.meta.env.VITE_API_URL}MailTemplate`,data,{
+            headers:{
+                Authorization: `Bearer ${GetToken()}`
+            }
+        }).then(response => {
+            var cad = response.data;
+            if(cad.success)
+            {
+                enqueueSnackbar({
+                    message: "Template criado!",
+                    variant: 'info'
+                })
+                SetChange(!Change);
+                callMailTemplateData();
+            }
+            else
+            {
+                enqueueSnackbar({
+                    message: cad.menssages[0],
+                    variant: 'error'
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            enqueueSnackbar({
+                message: "Erro em nosso servidor tente mais tarde!",
+                variant: 'warning'
+            })
+        });
+    }
+    catch (err) {
+        const validationErrors = {};
+        if (err instanceof Yup.ValidationError) {
+            err.inner.forEach(error => {
+            validationErrors[error.path] = error.message;
+            });
+            formRef.current.setErrors(validationErrors);
+        }
+    }
+}
 
   return (
     <Page Title="E-mail Templates">
@@ -100,11 +171,17 @@ export const Mail = () => {
           </tr>
         </THead>
         <TBody>
-          <Tr>
-            <Td>Teste1</Td>
-            <Td>Teste1</Td>
-            <Td><IconButton aria-label="delete" size="small"> <MoreVertIcon fontSize="inherit" style={{color:"green"}}/></IconButton></Td>
-          </Tr>
+        {MailTemplates.map((mailTemplate) => (
+            <Tr key={mailTemplate.id}>
+              <Td>{mailTemplate.data}</Td>
+              <Td>{mailTemplate.status}</Td>
+              <Td>
+                <IconButton aria-label="delete" size="small">
+                  <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
+                </IconButton>
+              </Td>
+            </Tr>
+          ))}
         </TBody>
       </Table>
     </Page>

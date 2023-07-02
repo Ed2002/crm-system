@@ -6,51 +6,54 @@ import { Input } from "../components/Forms/Input";
 import { TBody, THead, Table, Td, Th, Tr } from "../components/Table";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
-import { useSnackbar } from 'notistack';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 import { SelectInput } from "../components/Forms/Select";
 import { Grid, IconButton, MenuItem } from "@mui/material";
 import { Modal } from "../components/Modal";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { GetAuthToken, GetToken } from "../services/auth";
+import { ClientType } from "../types/ApiTypes";
+import * as Yup from 'yup';
 
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const [Change,SetChange] = useState<boolean>(true);
+  const [Clients,SetClients] = useState<Array<ClientType>>([]);
+  const [Search,SetSearch] = useState<boolean>(true);
 
-  interface Client {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    document: string;
-    status: number;
-  }
-
-  const [clients, setClients] = useState<Client[]>([]);
-  const [registrationFormData, setRegistrationFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    document: '',
-  });
-  const [searchFormData, setSearchFormData] = useState({
-    name: '',
-    email: '',
-    status: '',
-    document: '',
-  });
-
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const response = await API.get("/ClientCrm");
-        setClients(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchClients();
-  }, []);
+  const callClientData = () => {
+    API.get(`${import.meta.env.VITE_API_URL}ClientCrm`,{
+        params:{
+            "PageSize": 10,
+            "Page":1,
+            "Id": Number(GetAuthToken()?.sub)
+        },
+        headers:{
+            Authorization: `Bearer ${GetToken()}`
+        }
+    }).then(response => {
+        let {data} = response;
+        if(data.success)
+        {
+            console.log(data.model.values[0]);
+            SetClients(data.model.values[0]);
+            SetSearch(false);
+        }
+        else
+        {
+            enqueueSnackbar({
+                message: data.menssages[0],
+                variant: 'error'
+            })
+        }
+    })
+    .catch(err => {
+        enqueueSnackbar({
+            message: "Erro em nosso servidor tente mais tarde!",
+            variant: 'warning'
+        })
+    });
+}
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -61,48 +64,89 @@ export const Client = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+  
+  const handleCreate = async (data:ClientType) => {
+    try
+    {
+        const schema = Yup.object().shape({
+            name: Yup.string().required("O Nome é obrigatório"),
+            email: Yup.string().email().required("O E-mail é obrigatório"),
+            phone: Yup.string().required("O Telefone é obrigatório"),
+            document: Yup.string().required("O CPF é obrigatório"),
+        })
 
-  const formSearchRef = useRef<FormHandles>(null);
-  const formModalRef = useRef<FormHandles>(null);
+        await schema.validate(data, {
+            abortEarly: false,
+          });
 
-  function handleSearch(data: any) {
-    const { name, email, status } = data;
-  
-    const filteredClients = clients.filter((client) => {
-      const clientName = client.name.toLowerCase();
-      const clientEmail = client.email.toLowerCase();
-      const clientStatus = client.status === "true" ? "Ativo" : "Inativo";
-  
-      const nameMatch = clientName.includes(name.toLowerCase());
-      const emailMatch = clientEmail.includes(email.toLowerCase());
-      const statusMatch = status === "" || clientStatus.includes(status);
-  
-      return nameMatch && emailMatch && statusMatch;
-    });
-  
-    setClients(filteredClients);
-  }  
-  
-  async function handleSubmit(data: any) {
-    try {
-      const response = await API.post("/ClientCrm", data);
-      const newClient: Client = response.data;
-      
-      setClients([...clients, newClient]);
-  
-      enqueueSnackbar("Cliente cadastrado com sucesso!", { variant: "success" });
-  
-      setRegistrationFormData({
-        name: '',
-        email: '',
-        phone: '',
-        document: '',
-      });
-    } catch (error) {
-      console.log(error);
-      enqueueSnackbar("Erro ao cadastrar cliente!", { variant: "error" });
+          data.status = 1;
+          data.idProject = 0;
+
+          console.log(data);
+
+        API.post(`${import.meta.env.VITE_API_URL}ClientCrm`,data,{
+            headers:{
+                Authorization: `Bearer ${GetToken()}`
+            }
+        }).then(response => {
+            var cad = response.data;
+            if(cad.success)
+            {
+                enqueueSnackbar({
+                    message: "Cliente criado!",
+                    variant: 'info'
+                })
+                SetChange(!Change);
+                callClientData();
+            }
+            else
+            {
+                enqueueSnackbar({
+                    message: cad.menssages[0],
+                    variant: 'error'
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            enqueueSnackbar({
+                message: "Erro em nosso servidor tente mais tarde!",
+                variant: 'warning'
+            })
+        });
     }
-  }
+    catch (err) {
+        const validationErrors = {};
+        if (err instanceof Yup.ValidationError) {
+            err.inner.forEach(error => {
+            validationErrors[error.path] = error.message;
+            });
+            formRef.current.setErrors(validationErrors);
+        }
+    }
+}
+
+const formSearchRef = useRef<FormHandles>(null);
+const formModalRef = useRef<FormHandles>(null);
+
+function handleSearch(data:ClientType) {
+
+  const filteredClients = Clients.filter((client) => {
+
+    if (data.name && !client.name.toLowerCase().includes(data.name.toLowerCase())) {
+      return false;
+    }
+    if (data.email && !client.email.toLowerCase().includes(data.email.toLowerCase())) {
+      return false;
+    }
+    if (data.status !== '' && data.status !== String(client.status)) {
+      return false;
+    }
+    return true;
+  });
+
+  SetClients(filteredClients);
+}
+ 
   
   return (
     <Page Title="Clientes">
@@ -120,10 +164,6 @@ export const Client = () => {
               label="Nome"
               variant="outlined"
               fullWidth
-              value={searchFormData.name}
-              onChange={(e) =>
-                setSearchFormData({ ...searchFormData, name: e.target.value })
-              }
             />
           </Grid>
           <Grid item xs={4}>
@@ -132,10 +172,6 @@ export const Client = () => {
               label="E-mail"
               variant="outlined"
               fullWidth
-              value={searchFormData.email}
-              onChange={(e) =>
-                setSearchFormData({ ...searchFormData, email: e.target.value })
-              }
             />
           </Grid>
           <Grid item xs={2}>
@@ -144,10 +180,6 @@ export const Client = () => {
               label="Status"
               variant="outlined"
               fullWidth
-              value={searchFormData.status}
-              onChange={(e) =>
-                setSearchFormData({ ...searchFormData, status: e.target.value })
-              }
             >
               <MenuItem value="">Todos</MenuItem>
               <MenuItem value="true">Atendido</MenuItem>
@@ -186,7 +218,7 @@ export const Client = () => {
         maxWidth="md"
         fullWidth
       >
-        <Form ref={formModalRef} onSubmit={handleSubmit}>
+        <Form ref={formModalRef} onSubmit={handleCreate}>
           <Grid
             container
             spacing={2}
@@ -199,10 +231,6 @@ export const Client = () => {
                 label="Nome"
                 variant="outlined"
                 fullWidth
-                value={registrationFormData.name}
-                onChange={(e) =>
-                  setRegistrationFormData({ ...registrationFormData, name: e.target.value })
-                }
               />
             </Grid>
             <Grid item xs={11}>
@@ -211,10 +239,6 @@ export const Client = () => {
                 label="E-mail"
                 variant="outlined"
                 fullWidth
-                value={registrationFormData.email}
-                onChange={(e) =>
-                  setRegistrationFormData({ ...registrationFormData, email: e.target.value })
-                }
               />
             </Grid>
             <Grid item xs={11}>
@@ -223,10 +247,6 @@ export const Client = () => {
                 label="Telefone"
                 variant="outlined"
                 fullWidth
-                value={registrationFormData.phone}
-                onChange={(e) =>
-                  setRegistrationFormData({ ...registrationFormData, phone: e.target.value })
-                }
               />
             </Grid>
             <Grid item xs={11}>
@@ -262,7 +282,7 @@ export const Client = () => {
           </tr>
         </THead>
         <TBody>
-          {clients.map((client) => (
+          {Clients.map((client) => (
             <Tr key={client.id}>
               <Td>{client.name}</Td>
               <Td>{client.email}</Td>
