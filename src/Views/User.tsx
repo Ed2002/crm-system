@@ -16,6 +16,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Loanding } from "../components/Loanding";
 import Grow from "@mui/material/Grow";
 import * as Yup from 'yup';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const User = () => {
     const formRef = useRef<FormHandles>(null);
@@ -121,6 +123,15 @@ export const User = () => {
     return (
         <div className="gradient">
             <Page Title="">
+                <IconButton
+                    sx={{ position: 'fixed', left: 60 }}
+                    onClick={() => {
+                        window.location.href = '/';
+                    }}
+                >
+                    <ArrowBackIcon />
+                </IconButton>
+
                 {Search ? (
                     <Loanding/>
                 ) : (
