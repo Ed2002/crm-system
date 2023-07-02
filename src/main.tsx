@@ -28,7 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/Project",
     element: (
+      <SnackbarProvider>
         <Project/>
+        <AuthProvider/>
+      </SnackbarProvider>
     ),
   },
   {

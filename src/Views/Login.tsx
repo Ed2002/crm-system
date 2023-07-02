@@ -27,7 +27,7 @@ export const Login = () => {
                     variant: "success"
                 });
                 setTimeout(()=>{
-                    navigate("/");
+                    navigate("/Project");
                 },2000);
             }
             else
