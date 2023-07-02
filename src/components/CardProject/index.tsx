@@ -8,9 +8,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 interface ICardProject {
     ProjectId: number;
     ProjectName: string;
+    FuncSettings?: ()=>void;
 }
 
-export const CardProject = ({ProjectId, ProjectName}:ICardProject) => {
+export const CardProject = ({ProjectId, ProjectName, FuncSettings}:ICardProject) => {
 
     const navigate = useNavigate();
 
@@ -41,9 +42,7 @@ export const CardProject = ({ProjectId, ProjectName}:ICardProject) => {
                 fontSize: "35px",
             }}
             size="small"
-            onClick={() => {
-                console.log("Ok");
-            }}
+            onClick={FuncSettings}
             >
                 <SettingsIcon fontSize="inherit" style={{ color: "gray" }} />
             </IconButton>
