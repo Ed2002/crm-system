@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Home/:IdProject",
+    path: ":IdProject/Home",
     element: (
       <Menu>
         <Home/>
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Client",
+    path: ":IdProject/Clients",
     element: (
       <Menu>
         <Client/>
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Forms",
+    path: ":IdProject/Forms",
     element: (
       <Menu>
         <Forms/>
@@ -88,7 +88,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Report",
+    path: ":IdProject/Report",
     element: (
       <Menu>
         <Report/>
@@ -96,7 +96,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/Mail",
+    path: ":IdProject/Mail",
     element: (
       <Menu>
         <Mail/>

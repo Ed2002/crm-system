@@ -28,7 +28,7 @@ export const CardProject = ({ProjectId, ProjectName, FuncSettings}:ICardProject)
             }}
             size="small"
             onClick={() => {
-                navigate(`/Home/${ProjectId}`)
+                navigate(`/${ProjectId}/Home/`)
             }}
             >
                 <ArrowForwardIcon fontSize="inherit" style={{ color: "green" }} />
