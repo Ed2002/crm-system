@@ -18,8 +18,13 @@ import { Register } from './Views/Register.tsx';
 import { User } from './Views/User.tsx';
 import {ErroPage} from './Views/ErroPage.tsx';
 import {Project} from './Views/Project.tsx';
+import LandPage from './Views/landpage/Index.tsx';
 
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <LandPage/>
+  },
   {
     path: "/Project",
     element: (
@@ -27,7 +32,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/",
+    path: "/Home/:IdProject",
     element: (
       <Menu>
         <Home/>
