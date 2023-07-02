@@ -1,76 +1,76 @@
 export type ClientType = {
-    Id: number;
-    Name: string;
-    Email: string;
-    Phone: string;
-    Document: string;
-    Status: number;
-    IdProject: number;
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    document: string;
+    status: number;
+    idProject: number;
 }
 
 export type FormTemplateType = {
-    Id: number;
-    Data: string;
-    Status: boolean;
-    IdMailMarketingList: number;
+    id: number;
+    data: string;
+    status: boolean;
+    idMailMarketingList: number;
 }
 
 export type MailType = {
-    Id: number;
-    Body: string;
-    IdMailTemplate: string;
+    id: number;
+    body: string;
+    idMailTemplate: string;
 }
 
 export type MailMarketingListType = { 
-    Id: number;
-    ListName: string;
-    Status: boolean;
-    IdProject: number;
-    IdMail: number;
+    id: number;
+    listName: string;
+    status: boolean;
+    idProject: number;
+    idMail: number;
 }
 
 export type MailTemplateType = {
-    Id: number;
-    Data: string;
-    Status: boolean;
+    id: number;
+    data: string;
+    status: boolean;
 }
 
 export type ProjectType = {
-    Id: number;
-    Name: string;
-    Description: string;
-    Photo: string;
-    CreatedAt: string;
-    Status: boolean;
-    IdUserOwner: number;
+    id: number;
+    name: string;
+    description: string;
+    photo: string;
+    createdAt: string;
+    status: boolean;
+    idUserOwner: number;
 }
 
 export type ProjectAcessType = {
-    Id: number;
-    UserType: number;
-    IdProject: number;
-    IdUser: number;
+    id: number;
+    userType: number;
+    idProject: number;
+    idUser: number;
 }
 
 export type ProjectDataType = {
-    Id: number;
-    Revenue: number;
-    NumberOfClients: number;
-    ProjectName: string;
-    IdProject: number;
+    id: number;
+    revenue: number;
+    numberOfClients: number;
+    projectName: string;
+    idProject: number;
 }
 
 export type StatusMailType = {
-    Id: number;
-    SendStatus: number;
-    IdMail: number;
+    id: number;
+    sendStatus: number;
+    idMail: number;
 }
 
 export type UserType = {
-    Id: number;
-    Name: string;
-    Email: string;
-    Phone: string;
-    Photo: string;
-    Status: boolean;
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    photo: string;
+    status: boolean;
 }

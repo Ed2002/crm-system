@@ -28,7 +28,6 @@ export const VerifyToken = () => {
         return false;
     }
     let decoded = jwt_decode((token as string));
-    console.log(decoded);
     if (Date.now() >= decoded.exp * 1000) {
         console.log("Not authorized");
         return false;

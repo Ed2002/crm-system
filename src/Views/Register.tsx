@@ -20,7 +20,8 @@ export const Register = () => {
         try
         {
             const schema = Yup.object().shape({
-                email: Yup.string().email().required(),
+                name: Yup.string().required("O Nome é obrigatório"),
+                email: Yup.string().email().required("O E-mail é obrigatório"),
                 senha: Yup.string().min(4,"A senha deve conter no minimo 4 caracteres").required(),
                 confirmSenha: Yup.string() .oneOf([Yup.ref('senha')], 'As senhas devem ser iguais')
             })
@@ -30,6 +31,7 @@ export const Register = () => {
               });
 
             API.post(`${import.meta.env.VITE_AUTH_API_URL}/Register`,{
+                name: data.name,
                 email: data.email,
                 password: data.senha  
             }).then(response => {
@@ -48,7 +50,7 @@ export const Register = () => {
                         var res = response.data;
                         SaveToken(res.model);
                         setTimeout(()=>{
-                            navigate(`/User/${cad.model}`)
+                            navigate('/User')
                         },2000);
                     }).catch(error => {
                         enqueueSnackbar({
@@ -98,6 +100,9 @@ export const Register = () => {
                     <Grid container spacing={2} sx={{
                         padding: 4
                     }}>
+                        <Grid item xs={12}>
+                            <Input name='name' required variant='outlined' placeholder='Nome' type='text' label="Nome" fullWidth/>
+                        </Grid>
                         <Grid item xs={12}>
                             <Input name='email' required variant='outlined' placeholder='E-mail' type='email' label="E-mail" fullWidth/>
                         </Grid>
