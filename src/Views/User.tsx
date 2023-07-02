@@ -9,11 +9,9 @@ import { Input } from "../components/Forms/Input/index";
 import { useEffect, useRef, useState } from "react";
 import { LoadButton } from "../components/Buttons/LoadButton/index";
 import { API } from "../services/axios";
-import { GetToken } from "../services/auth";
-import { useParams } from "react-router-dom";
+import { GetAuthToken, GetToken } from "../services/auth";
 
 export const User = () => {
-    const { userId } = useParams();
     const formRef = useRef<FormHandles>(null);
     const [Change,SetChange] = useState<boolean>(true);
 
@@ -23,7 +21,7 @@ export const User = () => {
                 params:{
                     "PageSize": 10,
                     "Page":1,
-                    "Id": userId
+                    "Id": Number(GetAuthToken()?.sub)
                 },
                 headers:{
                     Authorization: `Bearer ${GetToken()}`

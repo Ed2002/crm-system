@@ -39,7 +39,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/User/:userId",
+    path: "/User",
     element: (
     <SnackbarProvider>
       <User/>
