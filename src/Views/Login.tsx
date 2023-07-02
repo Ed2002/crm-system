@@ -34,7 +34,7 @@ export const Login = () => {
             {
                 enqueueSnackbar({
                     message: res.menssages[0],
-                    variant: "success"
+                    variant: "error"
                 });
             }
         }).catch(error => {
