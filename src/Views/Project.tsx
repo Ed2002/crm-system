@@ -5,35 +5,16 @@ import { Input } from "../components/Forms/Input";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { useSnackbar, enqueueSnackbar } from 'notistack';
-import { Grid, IconButton, MenuItem } from "@mui/material";
+import { Grid, IconButton, MenuItem, Stack } from "@mui/material";
 import { Modal } from "../components/Modal";
 import { Card } from "../components/Card";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+import { GetAuthToken } from "../services/auth";
+import { CardProject } from "../components/CardProject";
 
 export const Project = () => {
   const formRef = useRef<FormHandles>(null);
   const { enqueueSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    const exhttp = () => {
-      API.get('https://jsonplaceholder.typicode.com/todos/1')
-        .then(({data}) => {
-          enqueueSnackbar({
-            message: 'Requisição API feita com sucesso',
-            variant: "success" 
-          });
-          console.log(data);
-        })
-        .catch(err => {
-          enqueueSnackbar({
-            message: 'Erro na requisição API',
-            variant: "success" 
-          });
-          console.log(err);
-        })
-    }
-    return () => exhttp();
-  }, []);
 
   function handleSubmit(data: any) {
     console.log(data);
@@ -50,27 +31,9 @@ export const Project = () => {
 
   return (
     <div style={{ height: '100vh' }}>
-      <div className="gradient" style={{ position: 'relative' }}>
-        <Grid container spacing={1}
-            sx={{
-              '& > :not(style)': { marginTop: '16px', marginRight: '35px', marginLeft: '35px'},
-            }}>
-          <Grid item xs={4}>
-            <h1>Bem vindo, User!</h1>
-          </Grid>
+      <div className="backgroud-white">
 
-          <Grid item xs={12}>
-            <Grid container alignItems="center">
-              <Grid item xs={9}>
-                <h2>Meus Projetos</h2>
-              </Grid>
-              <Grid item xs={3} textAlign="right">
-                <LoadButton variant="outlined" name="addProject" title="Adicionar Projeto" type="button" onClick={handleOpenModal} fullWidth style={{height:"54px"}}/>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Modal Title="Cadastro de Projeto" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
+      <Modal Title="Cadastro de Projeto" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
             <Form ref={formRef} onSubmit={handleSubmit}>
               <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={11}>
@@ -79,9 +42,6 @@ export const Project = () => {
                 <Grid item xs={11}>
                   <Input name="description" label="Descrição" variant="outlined" fullWidth multiline rows={5}/>
                 </Grid>
-                <Grid item xs={11}>
-                  <Input name="createDate" label="Data de Criação" variant="outlined" fullWidth/>
-                </Grid>
                 <Grid item xs={11} style={{ marginBottom: '30px' }}>
                   <LoadButton variant="contained" name="submit" title="Salvar" type="submit" fullWidth style={{height:"54px"}}/>
                 </Grid>
@@ -89,31 +49,50 @@ export const Project = () => {
             </Form>
           </Modal>
 
-          <Grid item xs={3}>
-            <Card style={{ position: "relative", height: "200px" }}>
-              <h3>Project Name</h3>
-              <IconButton
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                  zIndex: 1,
-                  fontSize: "35px",
-                }}
-                aria-label="ArrowForwardIcon"
-                size="small"
-                onClick={() => {
-                  window.location.href = '/';
-              }}
-              >
-                <ArrowForwardIcon fontSize="inherit" style={{ color: "green" }} />
-              </IconButton>
-            </Card>
+
+        <Grid container spacing={1}
+            sx={{
+              '& > :not(style)': { marginTop: '16px', marginRight: '35px', marginLeft: '35px'},
+            }}>
+          <Grid item xs={4}>
+            <h1>Bem vindo, {GetAuthToken()?.name}</h1>
           </Grid>
 
-          <Grid item xs={12} textAlign="center" style={{ position: 'absolute', bottom: '0', left: '0', right: '0' }}>
-            <p style={{ marginBottom: '16px', fontSize: '20px', fontWeight: 'bold', color: 'white' }}>2023 - CRM</p>
+          <Grid item xs={12}>
+            <Grid container alignItems="center">
+              <Grid item xs={9}>
+                <h2>Meus Projetos</h2>
+              </Grid>
+              <Grid item xs={3} textAlign="right">
+                <LoadButton variant="contained" name="addProject" title="Adicionar Projeto" type="button" onClick={handleOpenModal} fullWidth style={{height:"54px"}}/>
+              </Grid>
+            </Grid>
           </Grid>
+        </Grid>
+
+        <Grid container sx={{marginTop: 4}}>
+          <Grid item xs={12}>
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="baseline">
+              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
+              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
+              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
+              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
+            </Stack>
+          </Grid>
+          <Grid item xs={12}>
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="baseline">
+              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
+              <CardProject ProjectId={1} ProjectName="My Teste Project asdasdas"/>
+              <CardProject ProjectId={1} ProjectName="My Teste Project asdasdasdasdasdasasdasdasdasdasdasasdasdasdasdasdasasdasdasdasdasdas"/>
+              <CardProject ProjectId={1} ProjectName="My Teste Project asdasdsadasdasdas"/>
+            </Stack>
+          </Grid>
+        </Grid>
+
+        <Grid container sx={{marginTop: 8}} className="background-gradient">
+          <Grid item xs={12} textAlign="center">
+            <p style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.46)', marginBottom: '16px', fontSize: '20px', fontWeight: 'bold', color: 'white' }}>2023 - CRM</p>
+          </Grid> 
         </Grid>
       </div>
     </div>
