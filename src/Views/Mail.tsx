@@ -16,12 +16,15 @@ import { enqueueSnackbar } from "notistack";
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { MailTemplateType } from "../types/ApiTypes";
+import { Pag } from "../components/Pagination";
 
 export const Mail = () => {
   const formRef = useRef<FormHandles>(null);
   const [Change,SetChange] = useState<boolean>(true);
   const [MailTemplates,SetMailTemplates] = useState<Array<MailTemplateType>>([]);
   const [Search,SetSearch] = useState<boolean>(true);
+  const [Pagina,SetPagina] = useState<number>(1);
+  const [Total,SetTotal] = useState<number>(1);
 
     const callMailTemplateData = () => {
       API.get(`${import.meta.env.VITE_API_URL}MailTemplate`,{
@@ -37,6 +40,7 @@ export const Mail = () => {
           if(data.success)
           {
               SetMailTemplates(data.model.values);
+              SetTotal(data.model.totalPages);
               SetSearch(false);
           }
           else
@@ -142,6 +146,10 @@ export const Mail = () => {
   const formSearchRef = useRef<FormHandles>(null);
   const formModalRef = useRef<FormHandles>(null);
 
+  useEffect(()=>{
+    formSearchRef.current?.submitForm();
+  },[Pagina])
+
 const handleSearch = (data:any) => {
     API.get(`${import.meta.env.VITE_API_URL}MailTemplateCrm`,{
       params:{
@@ -157,6 +165,7 @@ const handleSearch = (data:any) => {
       if(data.success)
       {
         SetMailTemplates(data.model.values);
+        SetTotal(data.model.totalPages);
           SetSearch(false);
       }
       else
@@ -238,6 +247,15 @@ const handleSearch = (data:any) => {
           ))}
         </TBody>
       </Table>
+      <Grid
+          container
+          spacing={2}
+          sx={{marginTop: 2}}
+        >
+          <Grid item xs={12}>
+            <Pag Count={Total} hideNextButton hidePrevButton onChange={(e:any) => {SetPagina(Number(e.target.textContent))}}/>
+          </Grid>
+        </Grid>
     </Page>
   )
 }

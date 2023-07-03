@@ -183,7 +183,7 @@ export const Project = () => {
                   <Input required defaultValue={Project?.description} name="description" label="Descrição" variant="outlined" fullWidth multiline rows={5}/>
                 </Grid>
                 <Grid item xs={11}>
-                  <LoadButton variant="contained" name="status" title={Project?.status ? 'INATIVAR' : 'ATIVAR'} fullWidth type="button" />
+                  <LoadButton variant="contained" name="status" title={Project?.status ? 'INATIVAR' : 'ATIVAR'} color={Project?.status ? 'error' : 'success'} fullWidth type="button" />
                 </Grid>
                 <Grid item xs={11} style={{ marginBottom: '30px' }}>
                   <LoadButton variant="contained" name="submit" title="Salvar" type="submit" fullWidth style={{height:"54px"}}/>
@@ -222,7 +222,7 @@ export const Project = () => {
                         {Projects.length ? (
                           <Stack spacing={2} maxWidth="90%" direction="row" justifyContent="center" alignItems="baseline">
                             {Projects.map(item => (
-                              <CardProject ProjectId={item.id} ProjectName={item.name} FuncSettings={()=>{handleConfig(item.id)}} FuncAccess={()=>{handleAccess(item.id)}}/>
+                              <CardProject ProjectId={item.id} ProjectName={item.name} FuncSettings={()=>{handleConfig(item)}} FuncAccess={()=>{handleAccess(item.id)}}/>
                             ))}
                           </Stack>
                         ) : (
