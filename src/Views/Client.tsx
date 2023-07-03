@@ -90,7 +90,7 @@ export const Client = () => {
             abortEarly: false,
           });
 
-          data.status = 2;
+          data.status = true;
           data.idProject = Number(GetProject());
 
           console.log(data);
@@ -136,21 +136,17 @@ export const Client = () => {
     }
 }
 
-const convertStatus = (status:number) => {
+const convertStatus = (status:boolean) => {
   switch(status)
   {
-    case 1:
-      return (<Tooltip title="Atendido" placement="left">
+    case true:
+      return (<Tooltip title="Ativo" placement="left">
             <CheckOutlinedIcon color="success"/>
           </Tooltip>);
-    case 2:
-      return (<Tooltip title="Em Atendimento" placement="left">
-            <HeadsetMicOutlinedIcon color="info"/>
+    case false:
+      return (<Tooltip title="Inativo" placement="left">
+            <CancelOutlinedIcon color="info"/>
           </Tooltip>);
-    case 3:
-      return (<Tooltip title="Não Atendido" placement="left">
-          <CancelOutlinedIcon color="error"/>
-        </Tooltip>);
   }
 }
 
@@ -234,9 +230,8 @@ const handleSearch = (data:any) => {
               fullWidth
             >
               <MenuItem value={null}>Todos</MenuItem>
-              <MenuItem value={1}>Atendido</MenuItem>
-              <MenuItem value={2}>Em Atendimento</MenuItem>
-              <MenuItem value={3}>Não Atendido</MenuItem>
+              <MenuItem value={1}>Ativo</MenuItem>
+              <MenuItem value={2}>Inativo</MenuItem>
             </SelectInput>
           </Grid>
           <Grid item xs={1}>
