@@ -26,7 +26,7 @@ export const Mail = () => {
   const [Search,SetSearch] = useState<boolean>(true);
   const [Pagina,SetPagina] = useState<number>(1);
   const [Total,SetTotal] = useState<number>(1);
-  const [selectedClient, setSelectedMailTemplate] = useState<MailTemplateType | null>(null);
+  const [selectedMailTemplate, setSelectedMailTemplate] = useState<MailTemplateType | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const callMailTemplateData = () => {
@@ -84,11 +84,11 @@ export const Mail = () => {
     setAnchorEl(null);
   };
 
-  const handleDelete = (client: MailTemplateType | null) => {
+  const handleDelete = (mailTemplate: MailTemplateType | null) => {
    
   };
   
-  const handleStatusChange = (client: MailTemplateType | null, status: boolean) => {
+  const handleStatusChange = (mailTemplate: MailTemplateType | null, status: boolean) => {
    
   };
 
@@ -268,9 +268,9 @@ const handleSearch = (data:any) => {
                   open={Boolean(anchorEl)}
                   onClose={handleCloseMenu}
                 >
-                  <MenuItem onClick={() => handleDelete(selectedClient)}>Excluir</MenuItem>
-                  <MenuItem onClick={() => handleStatusChange(selectedClient, false)}>Inativar</MenuItem>
-                  <MenuItem onClick={() => handleStatusChange(selectedClient, true)}>Ativar</MenuItem>
+                  <MenuItem onClick={() => handleDelete(selectedMailTemplate)}>Excluir</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedMailTemplate, false)}>Inativar</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedMailTemplate, true)}>Ativar</MenuItem>
                 </Menu>
               </Td>
             </Tr>

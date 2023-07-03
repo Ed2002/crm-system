@@ -23,7 +23,7 @@ export const Forms = () => {
     const [Pagina, SetPagina] = useState<number>(1);
     const [Total, SetTotal] = useState<number>(1);
     const [Search, SetSearch] = useState<boolean>(true);
-    const [selectedClient, setSelectedForm] = useState<FormTemplateType | null>(null);
+    const [selectedForm, setSelectedForm] = useState<FormTemplateType | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, form: FormTemplateType) => {
@@ -35,16 +35,12 @@ export const Forms = () => {
         setAnchorEl(null);
       };
     
-      const handleDelete = (client: FormTemplateType | null) => {
-        if (client) {
-          // Lógica para excluir o cliente aqui
-        }
+      const handleDelete = (form: FormTemplateType | null) => {
+        
       };
       
-      const handleStatusChange = (client: FormTemplateType | null, status: boolean) => {
-        if (client) {
-          // Lógica para alterar o status do cliente aqui
-        }
+      const handleStatusChange = (form: FormTemplateType | null, status: boolean) => {
+        
       };
 
 const convertStatus = (status: boolean) => {
@@ -97,9 +93,9 @@ return (
                   open={Boolean(anchorEl)}
                   onClose={handleCloseMenu}
                 >
-                  <MenuItem onClick={() => handleDelete(selectedClient)}>Excluir</MenuItem>
-                  <MenuItem onClick={() => handleStatusChange(selectedClient, false)}>Inativar</MenuItem>
-                  <MenuItem onClick={() => handleStatusChange(selectedClient, true)}>Ativar</MenuItem>
+                  <MenuItem onClick={() => handleDelete(selectedForm)}>Excluir</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedForm, false)}>Inativar</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedForm, true)}>Ativar</MenuItem>
                 </Menu>
               </Td>
             </Tr>

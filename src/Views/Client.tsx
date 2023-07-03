@@ -419,8 +419,8 @@ const handleSearch = (data:any) => {
               <Td>{convertStatus(client.status)}</Td>
               <Td>
               <IconButton aria-label="menu" size="small" onClick={(e) => handleOpenMenu(e, client)}>
-  <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
-</IconButton>
+                <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
+              </IconButton>
                 <Menu
                   id="options-menu"
                   anchorEl={anchorEl}
