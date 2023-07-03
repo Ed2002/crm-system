@@ -7,18 +7,21 @@ import { TBody, THead, Table, Td, Th, Tr } from "../components/Table";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { SelectInput } from "../components/Forms/Select";
-import { Grid, IconButton, MenuItem } from "@mui/material";
+import { Grid, IconButton, MenuItem, Tooltip } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Modal } from "../components/Modal";
 import * as Yup from 'yup';
 import { GetAuthToken, GetToken } from "../services/auth";
 import { enqueueSnackbar } from "notistack";
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import { MailTemplateType } from "../types/ApiTypes";
 
 export const Mail = () => {
   const formRef = useRef<FormHandles>(null);
-    const [Change,SetChange] = useState<boolean>(true);
-    const [MailTemplates,SetMailTemplates] = useState<Array<MailTemplateType>>([]);
-    const [Search,SetSearch] = useState<boolean>(true);
+  const [Change,SetChange] = useState<boolean>(true);
+  const [MailTemplates,SetMailTemplates] = useState<Array<MailTemplateType>>([]);
+  const [Search,SetSearch] = useState<boolean>(true);
 
     const callMailTemplateData = () => {
       API.get(`${import.meta.env.VITE_API_URL}MailTemplate`,{
@@ -34,8 +37,7 @@ export const Mail = () => {
           let {data} = response;
           if(data.success)
           {
-              console.log(data.model.values[0]);
-              SetMailTemplates(data.model.values[0]);
+              SetMailTemplates(data.model.values);
               SetSearch(false);
           }
           else
@@ -48,15 +50,15 @@ export const Mail = () => {
       })
       .catch(err => {
           enqueueSnackbar({
-              message: "Erro na criação do template!",
+              message: "Erro em nosso servidor, tente mais tarde!",
               variant: 'warning'
           })
       });
   }
 
-  function handleSubmit(data: any) {
-    console.log(data);
-  }
+  useEffect(() => {
+    return () => callMailTemplateData();
+   },[])
 
   const [ModalTeste, SetModalTeste] = useState<boolean>(false);
   
@@ -71,6 +73,7 @@ export const Mail = () => {
     try
     {
         const schema = Yup.object().shape({
+            title: Yup.string().required("O título é obrigatório"),
             data: Yup.string().required("O conteúdo é obrigatório"),
         })
 
@@ -78,7 +81,9 @@ export const Mail = () => {
             abortEarly: false,
           });
 
-          data.status = 1;
+          data.status = true;
+
+          console.log(data);
 
         API.post(`${import.meta.env.VITE_API_URL}MailTemplate`,data,{
             headers:{
@@ -105,7 +110,7 @@ export const Mail = () => {
         }).catch(err => {
             console.log(err);
             enqueueSnackbar({
-                message: "Erro em nosso servidor tente mais tarde!",
+                message: "Erro em nosso servidor, tente mais tarde!",
                 variant: 'warning'
             })
         });
@@ -121,9 +126,59 @@ export const Mail = () => {
     }
 }
 
+  const convertStatus = (status:boolean) => {
+    switch(status)
+    {
+      case true:
+        return (<Tooltip title="Ativo" placement="left">
+              <CheckOutlinedIcon color="success"/>
+            </Tooltip>);
+      case false:
+        return (<Tooltip title="Inativo" placement="left">
+              <CancelOutlinedIcon color="error"/>
+            </Tooltip>);
+    }
+  }
+
+  const formSearchRef = useRef<FormHandles>(null);
+  const formModalRef = useRef<FormHandles>(null);
+
+const handleSearch = (data:any) => {
+    API.get(`${import.meta.env.VITE_API_URL}MailTemplateCrm`,{
+      params:{
+          "PageSize": 10,
+          "Page":1,
+          "Title": data.title
+      },
+      headers:{
+          Authorization: `Bearer ${GetToken()}`
+      }
+  }).then(response => {
+      let {data} = response;
+      if(data.success)
+      {
+        SetMailTemplates(data.model.values);
+          SetSearch(false);
+      }
+      else
+      {
+          enqueueSnackbar({
+              message: data.menssages[0],
+              variant: 'error'
+          })
+      }
+  })
+  .catch(err => {
+      enqueueSnackbar({
+          message: "Erro em nosso servidor tente mais tarde!",
+          variant: 'warning'
+      })
+  });
+}
+
   return (
     <Page Title="E-mail Templates">
-      <Form ref={formRef} onSubmit={handleSubmit}>
+      <Form ref={formSearchRef} onSubmit={handleSearch}>
         <Grid container spacing={1}
             sx={{
               '& > :not(style)': { marginTop: '16px' },
@@ -147,7 +202,7 @@ export const Mail = () => {
       </Form>
 
       <Modal Title="Envio de E-mails" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
-        <Form ref={formRef} onSubmit={handleSubmit}>
+        <Form ref={formModalRef} onSubmit={handleCreate}>
           <Grid container spacing={2} justifyContent="center" alignItems="center">
             <Grid item xs={11}>
               <Input name="title" label="Título" variant="outlined" fullWidth />
@@ -156,7 +211,7 @@ export const Mail = () => {
               <Input name="data" label="Conteúdo" variant="outlined" fullWidth multiline rows={5} />
             </Grid>
             <Grid item xs={11} style={{ marginBottom: '30px' }}>
-              <LoadButton variant="contained" name="submit" title="Enviar" type="submit" fullWidth style={{ height: "54px" }} />
+              <LoadButton variant="contained" name="submit" title="Salvar" type="submit" fullWidth style={{ height: "54px" }} />
             </Grid>
           </Grid>
         </Form>
@@ -174,7 +229,7 @@ export const Mail = () => {
         {MailTemplates.map((mailTemplate) => (
             <Tr key={mailTemplate.id}>
               <Td>{mailTemplate.data}</Td>
-              <Td>{mailTemplate.status}</Td>
+              <Td>{convertStatus(mailTemplate.status)}</Td>
               <Td>
                 <IconButton aria-label="delete" size="small">
                   <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />

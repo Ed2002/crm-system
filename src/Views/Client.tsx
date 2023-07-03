@@ -144,7 +144,7 @@ const convertStatus = (status:number) => {
             <HeadsetMicOutlinedIcon color="info"/>
           </Tooltip>);
     case 3:
-      return (<Tooltip title="Em Atendimento" placement="left">
+      return (<Tooltip title="Não Atendido" placement="left">
           <CancelOutlinedIcon color="error"/>
         </Tooltip>);
   }

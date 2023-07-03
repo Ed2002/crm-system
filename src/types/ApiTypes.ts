@@ -31,6 +31,7 @@ export type MailMarketingListType = {
 
 export type MailTemplateType = {
     id: number;
+    title: string;
     data: string;
     status: boolean;
 }
