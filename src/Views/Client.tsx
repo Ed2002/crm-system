@@ -8,7 +8,7 @@ import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { enqueueSnackbar, useSnackbar } from 'notistack';
 import { SelectInput } from "../components/Forms/Select";
-import { Grid, IconButton, MenuItem, Tooltip } from "@mui/material";
+import { Grid, IconButton, MenuItem, Pagination, Tooltip } from "@mui/material";
 import { Modal } from "../components/Modal";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { GetAuthToken, GetToken } from "../services/auth";
@@ -18,11 +18,14 @@ import { GetProject } from "../services/project";
 import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import { Pag } from "../components/Pagination";
 
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
   const [Change,SetChange] = useState<boolean>(true);
   const [Clients,SetClients] = useState<Array<ClientType>>([]);
+  const [Pagina,SetPagina] = useState<number>(1);
+  const [Total,SetTotal] = useState<number>(1);
   const [Search,SetSearch] = useState<boolean>(true);
 
   const callClientData = () => {
@@ -40,6 +43,7 @@ export const Client = () => {
         if(data.success)
         {
             SetClients(data.model.values);
+            SetTotal(data.model.totalPages);
             SetSearch(false);
         }
         else
@@ -153,11 +157,16 @@ const convertStatus = (status:number) => {
 const formSearchRef = useRef<FormHandles>(null);
 const formModalRef = useRef<FormHandles>(null);
 
+useEffect(()=>{
+  formSearchRef.current?.submitForm();
+},[Pagina])
+
+
 const handleSearch = (data:any) => {
     API.get(`${import.meta.env.VITE_API_URL}ClientCrm`,{
       params:{
           "PageSize": 10,
-          "Page":1,
+          "Page":Pagina,
           "IdProject": Number(GetProject()),
           "Name": data.name,
           "Email": data.email,
@@ -171,6 +180,7 @@ const handleSearch = (data:any) => {
       if(data.success)
       {
           SetClients(data.model.values);
+          SetTotal(data.model.totalPages);
           SetSearch(false);
       }
       else
@@ -339,6 +349,15 @@ const handleSearch = (data:any) => {
           ))}
         </TBody>
       </Table>
+      <Grid
+          container
+          spacing={2}
+          sx={{marginTop: 2}}
+        >
+          <Grid item xs={12}>
+            <Pag Count={Total} hideNextButton hidePrevButton onChange={(e:any) => {SetPagina(Number(e.target.textContent))}}/>
+          </Grid>
+        </Grid>
     </Page>
   );
 };
