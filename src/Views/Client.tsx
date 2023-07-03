@@ -15,7 +15,6 @@ import { GetAuthToken, GetToken } from "../services/auth";
 import { ClientType } from "../types/ApiTypes";
 import * as Yup from 'yup';
 import { GetProject } from "../services/project";
-import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { Pag } from "../components/Pagination";
@@ -111,6 +110,7 @@ export const Client = () => {
           }
         })
         .catch(err => {
+          console.log(err);
           enqueueSnackbar({
             message: "Erro em nosso servidor. Tente novamente mais tarde!",
             variant: 'warning'

@@ -1,30 +1,35 @@
 import { Card } from "../components/Card";
 import { Page } from "../components/Page";
+import Grid from "@mui/material/Grid";
 
 function Home() {
-
   return (
-      <Page Title="Project X">
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Card style={{ flex: '1', marginRight: '10px' }}>
+    <Page Title="Project X">
+      <Grid container spacing={1} sx={{ "& > :not(style)": { marginTop: "16px" } }}>
+        <Grid item xs={4}>
+          <Card>
             <h3>Novos Clientes Cadastrados</h3>
           </Card>
-  
-          <Card style={{ flex: '1', marginRight: '10px' }}>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Card>
             <h3>Clientes Aguardando Atendimento</h3>
           </Card>
-  
-          <Card style={{ flex: '1' }}>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Card>
             <h3>Finalizados</h3>
           </Card>
-        </div>
+        </Grid>
+      </Grid>
 
-        <Card>
-          <h1>Relatório Aqui</h1>
-        </Card>
-
-      </Page>
-  )  
+      <Card>
+        <h1>Relatório Aqui</h1>
+      </Card>
+    </Page>
+  );
 }
 
-export default Home
+export default Home;
