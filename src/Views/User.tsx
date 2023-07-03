@@ -126,7 +126,7 @@ export const User = () => {
                 <IconButton
                     sx={{ position: 'fixed', left: 60 }}
                     onClick={() => {
-                        window.location.href = '/';
+                        window.location.href = ':IdProject/Home';
                     }}
                 >
                     <ArrowBackIcon />

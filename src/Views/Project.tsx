@@ -98,10 +98,10 @@ export const Project = () => {
         }
         else
         {
-          enqueueSnackbar({
-            message: add.menssages[0],
-            variant: 'error'
-          })
+          /*enqueueSnackbar({
+            //message: add.menssages[0],
+            //variant: 'error'
+          })*/
         }
       })
       .catch(err => {

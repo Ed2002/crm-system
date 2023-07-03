@@ -50,7 +50,7 @@ export const Menu = ({ children }: IMenu) => {
             Icon: <AccountCircleIcon style={{ fontSize: 45, position: 'fixed', bottom: 40, marginLeft: 23 }} />,
             Link: "/User",
             Target: "_self",
-            Title: "Usuário"
+            Title: ""
         }
     ];
 
