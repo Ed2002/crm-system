@@ -220,7 +220,7 @@ export const Project = () => {
                 <Grid container sx={{marginTop: 4}}>
                     <Grid item xs={12}>
                         {Projects.length ? (
-                          <Stack spacing={2} maxWidth="90%" direction="row" justifyContent="center" alignItems="baseline">
+                          <Stack spacing={1}  useFlexGap flexWrap="wrap" maxWidth="100%" direction="row" justifyContent="center" alignItems="center">
                             {Projects.map(item => (
                               <CardProject ProjectId={item.id} ProjectName={item.name} FuncSettings={()=>{handleConfig(item)}} FuncAccess={()=>{handleAccess(item.id)}}/>
                             ))}
