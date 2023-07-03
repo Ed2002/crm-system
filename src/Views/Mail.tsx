@@ -17,6 +17,7 @@ import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { MailTemplateType } from "../types/ApiTypes";
 import { Pag } from "../components/Pagination";
+import Menu from '@mui/material/Menu';
 
 export const Mail = () => {
   const formRef = useRef<FormHandles>(null);
@@ -25,12 +26,14 @@ export const Mail = () => {
   const [Search,SetSearch] = useState<boolean>(true);
   const [Pagina,SetPagina] = useState<number>(1);
   const [Total,SetTotal] = useState<number>(1);
+  const [selectedClient, setSelectedClient] = useState<MailTemplateType | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const callMailTemplateData = () => {
       API.get(`${import.meta.env.VITE_API_URL}MailTemplate`,{
           params:{
               "PageSize": 10,
-              "Page": 1
+              "Page": Pagina
           },
           headers:{
               Authorization: `Bearer ${GetToken()}`
@@ -70,6 +73,27 @@ export const Mail = () => {
   };
   const handleCloseModal = () => {
     SetModalTeste(false);
+  };
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedClient(mailTemplates); // Armazena o cliente selecionado no estado
+  };
+  
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = (client: MailTemplateType | null) => {
+    if (client) {
+      // Lógica para excluir o cliente aqui
+    }
+  };
+  
+  const handleStatusChange = (client: MailTemplateType | null, status: boolean) => {
+    if (client) {
+      // Lógica para alterar o status do cliente aqui
+    }
   };
 
   const handleCreate = async (data:MailTemplateType) => {
@@ -151,10 +175,10 @@ export const Mail = () => {
   },[Pagina])
 
 const handleSearch = (data:any) => {
-    API.get(`${import.meta.env.VITE_API_URL}MailTemplateCrm`,{
+    API.get(`${import.meta.env.VITE_API_URL}MailTemplate`,{
       params:{
           "PageSize": 10,
-          "Page":1,
+          "Page": Pagina,
           "Title": data.title
       },
       headers:{
@@ -178,7 +202,7 @@ const handleSearch = (data:any) => {
   })
   .catch(err => {
       enqueueSnackbar({
-          message: "Erro em nosso servidor tente mais tarde!",
+          message: "Erro em nosso servidor, tente mais tarde!",
           variant: 'warning'
       })
   });
@@ -239,9 +263,19 @@ const handleSearch = (data:any) => {
               <Td>{mailTemplate.data}</Td>
               <Td>{convertStatus(mailTemplate.status)}</Td>
               <Td>
-                <IconButton aria-label="delete" size="small">
+                <IconButton aria-controls="options-menu" aria-haspopup="true" onClick={handleOpenMenu}>
                   <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
                 </IconButton>
+                <Menu
+                  id="options-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMenu}
+                >
+                  <MenuItem onClick={() => handleDelete(selectedClient)}>Excluir</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedClient, false)}>Inativar</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedClient, true)}>Ativar</MenuItem>
+                </Menu>
               </Td>
             </Tr>
           ))}

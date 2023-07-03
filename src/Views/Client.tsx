@@ -19,6 +19,7 @@ import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { Pag } from "../components/Pagination";
+import Menu from '@mui/material/Menu';
 
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
@@ -27,12 +28,15 @@ export const Client = () => {
   const [Pagina,SetPagina] = useState<number>(1);
   const [Total,SetTotal] = useState<number>(1);
   const [Search,SetSearch] = useState<boolean>(true);
+  const [selectedClient, setSelectedClient] = useState<ClientType | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
 
   const callClientData = () => {
     API.get(`${import.meta.env.VITE_API_URL}ClientCrm`,{
         params:{
             "PageSize": 10,
-            "Page":1,
+            "Page": Pagina,
             "IdProject": Number(GetProject())
         },
         headers:{
@@ -75,6 +79,84 @@ export const Client = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedClient(client); 
+  };
+  
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = (client: ClientType | null) => {
+    if (client) {
+      API.delete(`${import.meta.env.VITE_API_URL}ClientCrm/${client.id}`, {
+        headers: {
+          Authorization: `Bearer ${GetToken()}`
+        }
+      })
+        .then(response => {
+          const { data } = response;
+          if (data.success) {
+            enqueueSnackbar({
+              message: "Cliente excluído!",
+              variant: 'info'
+            });
+          } else {
+            enqueueSnackbar({
+              message: data.menssages[0],
+              variant: 'error'
+            });
+          }
+        })
+        .catch(err => {
+          enqueueSnackbar({
+            message: "Erro em nosso servidor. Tente novamente mais tarde!",
+            variant: 'warning'
+          });
+        });
+    }
+  };
+  
+  const handleStatusChange = (client: ClientType | null, status: boolean) => {
+    if (client) {
+      API.put(`${import.meta.env.VITE_API_URL}ClientCrm/${client.id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${GetToken()}`
+        }
+      })
+        .then(response => {
+          const { data } = response;
+          if (data.success) {
+            enqueueSnackbar({
+              message: "Status do cliente alterado!",
+              variant: 'info'
+            });
+            SetClients(prevClients =>
+              prevClients.map(c => {
+                if (c.id === client.id) {
+                  return { ...c, status };
+                }
+                return c;
+              })
+            );
+          } else {
+            enqueueSnackbar({
+              message: data.menssages[0],
+              variant: 'error'
+            });
+          }
+        })
+        .catch(err => {
+          enqueueSnackbar({
+            message: "Erro em nosso servidor. Tente novamente mais tarde!",
+            variant: 'warning'
+          });
+        });
+    }
+  };
+  
   
   const handleCreate = async (data:ClientType) => {
     try
@@ -336,9 +418,19 @@ const handleSearch = (data:any) => {
               <Td>{client.phone}</Td>
               <Td>{convertStatus(client.status)}</Td>
               <Td>
-                <IconButton aria-label="delete" size="small">
+                <IconButton aria-controls="options-menu" aria-haspopup="true" onClick={handleOpenMenu}>
                   <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
                 </IconButton>
+                <Menu
+                  id="options-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMenu}
+                >
+                  <MenuItem onClick={() => handleDelete(selectedClient)}>Excluir</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedClient, false)}>Inativar</MenuItem>
+                  <MenuItem onClick={() => handleStatusChange(selectedClient, true)}>Ativar</MenuItem>
+                </Menu>
               </Td>
             </Tr>
           ))}
