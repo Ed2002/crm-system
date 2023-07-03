@@ -5,23 +5,126 @@ import { Input } from "../components/Forms/Input";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { useSnackbar, enqueueSnackbar } from 'notistack';
-import { Grid, IconButton, MenuItem, Stack } from "@mui/material";
+import { Grid, Grow, IconButton, MenuItem, Stack } from "@mui/material";
 import { Modal } from "../components/Modal";
 import { Card } from "../components/Card";
 
-import { GetAuthToken } from "../services/auth";
+import { GetAuthToken, GetToken } from "../services/auth";
 import { CardProject } from "../components/CardProject";
+import { useNavigate } from "react-router-dom";
+import { SaveProject } from "../services/project";
+import { ProjectType } from "../types/ApiTypes";
+import { Loanding } from "../components/Loanding";
+import * as Yup from 'yup';
 
 export const Project = () => {
   const formRef = useRef<FormHandles>(null);
   const { enqueueSnackbar } = useSnackbar();
-
-  function handleSubmit(data: any) {
-    console.log(data);
-  }
+  const navigate = useNavigate();
+  const [Projects,SetProjects] = useState<Array<ProjectType>>([]);
+  const [Search,SetSearch] = useState<boolean>(true);
+  const [Project,SetProject] = useState<ProjectType>(null);
 
   const [ModalTeste, SetModalTeste] = useState<boolean>(false);
   
+  const handleSearch = () => {
+    SetSearch(true);
+    API.get(`${import.meta.env.VITE_API_URL}Project`,{
+      params:{
+        "PageSize": 9999,
+        "Page": 1,
+        "idUserOwner": Number(GetAuthToken()?.sub)
+      },
+      headers:{
+        Authorization: `Bearer ${GetToken()}`
+      }
+    }).then(response => {
+      var list = response.data;
+      if(list.success)
+      {
+        SetSearch(false);
+        SetProjects(list.model.values);
+      }
+      else
+      {
+        enqueueSnackbar({
+          message: list.menssages[0],
+          variant: 'error'
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+      enqueueSnackbar({
+        message: "Erro em nosso servidor tente mais tarde!",
+        variant: 'warning'
+      })
+    })
+  }
+
+  const handleAdd = async (data:ProjectType) => {
+    try
+    {
+      const schema = Yup.object().shape({
+        name: Yup.string().required("O Nome é obrigatório"),
+        description: Yup.string().required("A descrição é obrigatório"),
+      })
+
+      await schema.validate(data, {
+          abortEarly: false,
+        });
+
+      data.idUserOwner = Number(GetAuthToken()?.sub)
+      data.photo = '';
+      data.status = true;
+      data.createdAt = new Date().toISOString();
+
+      API.post(`${import.meta.env.VITE_API_URL}Project`,data,{
+        headers:{
+          Authorization: `Bearer ${GetToken()}`
+        }
+      }).then(response => {
+        const add = response.data;
+        if(add.success)
+        {
+          enqueueSnackbar({
+            message: `Projeto criado ${add.model}!`,
+            variant: 'info'
+          })
+          handleCloseModal();
+          handleSearch();
+        }
+        else
+        {
+          enqueueSnackbar({
+            message: add.menssages[0],
+            variant: 'error'
+          })
+        }
+      })
+      .catch(err => {
+          console.log(err);
+          enqueueSnackbar({
+              message: "Erro em nosso servidor tente mais tarde!",
+              variant: 'warning'
+          })
+      })
+
+    }
+    catch(err) {
+        const validationErrors = {};
+        if (err instanceof Yup.ValidationError) {
+            err.inner.forEach(error => {
+            validationErrors[error.path] = error.message;
+            });
+            formRef.current.setErrors(validationErrors);
+        }
+    }
+  }
+
+  useEffect(()=>{
+    return () => handleSearch();
+  },[]);
+
   const handleOpenModal = () => {
     SetModalTeste(true);
   };
@@ -29,18 +132,23 @@ export const Project = () => {
     SetModalTeste(false);
   };
 
+  const handleAccess = (IdProject:number) => {
+    SaveProject(IdProject.toString());
+    navigate(`/${IdProject}/Home`);
+  }
+
   return (
     <div style={{ height: '100vh' }}>
       <div className="backgroud-white">
 
-      <Modal Title="Cadastro de Projeto" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
-            <Form ref={formRef} onSubmit={handleSubmit}>
+          <Modal Title="Cadastro de Projeto" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
+            <Form ref={formRef} onSubmit={handleAdd}>
               <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={11}>
-                  <Input name="name" label="Nome" variant="outlined" fullWidth/>
+                  <Input required name="name" label="Nome" variant="outlined" fullWidth/>
                 </Grid>
                 <Grid item xs={11}>
-                  <Input name="description" label="Descrição" variant="outlined" fullWidth multiline rows={5}/>
+                  <Input required name="description" label="Descrição" variant="outlined" fullWidth multiline rows={5}/>
                 </Grid>
                 <Grid item xs={11} style={{ marginBottom: '30px' }}>
                   <LoadButton variant="contained" name="submit" title="Salvar" type="submit" fullWidth style={{height:"54px"}}/>
@@ -70,25 +178,28 @@ export const Project = () => {
           </Grid>
         </Grid>
 
-        <Grid container sx={{marginTop: 4}}>
-          <Grid item xs={12}>
-            <Stack spacing={2} direction="row" justifyContent="center" alignItems="baseline">
-              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
-              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
-              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
-              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
-            </Stack>
-          </Grid>
-          <Grid item xs={12}>
-            <Stack spacing={2} direction="row" justifyContent="center" alignItems="baseline">
-              <CardProject ProjectId={1} ProjectName="My Teste Project"/>
-              <CardProject ProjectId={1} ProjectName="My Teste Project asdasdas"/>
-              <CardProject ProjectId={1} ProjectName="My Teste Project asdasdasdasdasdasasdasdasdasdasdasasdasdasdasdasdasasdasdasdasdasdas"/>
-              <CardProject ProjectId={1} ProjectName="My Teste Project asdasdsadasdasdas"/>
-            </Stack>
-          </Grid>
-        </Grid>
-
+            {Search ? (
+                <Loanding/>
+            ) : (
+              <Grow in={!Search}>
+                <Grid container sx={{marginTop: 4}}>
+                    <Grid item xs={12}>
+                        {Projects.length ? (
+                          <Stack spacing={2} maxWidth="90%" direction="row" justifyContent="center" alignItems="baseline">
+                            {Projects.map(item => (
+                              <CardProject ProjectId={item.id} ProjectName={item.name} FuncAccess={()=>{handleAccess(item.id)}}/>
+                            ))}
+                          </Stack>
+                        ) : (
+                          <Stack spacing={2} maxWidth="90%" direction="row" justifyContent="center" alignItems="baseline">
+                            <h3 className="center">Sem Projetos Ainda!</h3>
+                          </Stack>
+                        )}
+                        
+                    </Grid>
+                </Grid>
+              </Grow>
+            )}
         <Grid container sx={{marginTop: 8, position: 'fixed', bottom: 0}} className="background-gradient">
           <Grid item xs={12} textAlign="center">
             <p style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.46)', marginBottom: '16px', fontSize: '20px', fontWeight: 'bold', color: 'white' }}>2023 - CRM</p>

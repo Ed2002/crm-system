@@ -8,6 +8,7 @@ import { ItemMenu } from "../components/Menu/types"
 import { SnackbarProvider } from 'notistack';
 import { AuthProvider } from '../services/auth_provider';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { GetProject } from '../services/project';
 
 interface IMenu {
     children: React.ReactNode;
@@ -17,31 +18,31 @@ export const Menu = ({ children }: IMenu) => {
     const menuItems: Array<ItemMenu> = [
         {
             Icon: <HomeOutlinedIcon sx={{ fontSize: 30 }} />,
-            Link: "/",
+            Link: `/${Number(GetProject())}/Home`,
             Target: "_self",
             Title: "Home"
         },
         {
             Icon: <PersonOutlineIcon sx={{ fontSize: 30 }} />,
-            Link: "/Client",
+            Link: `/${Number(GetProject())}/Clients`,
             Target: "_self",
             Title: "Usuários"
         },
         {
             Icon: <AssessmentOutlinedIcon sx={{ fontSize: 30 }} />,
-            Link: "/Report",
+            Link: `/${Number(GetProject())}/Report`,
             Target: "_self",
             Title: "Relatórios"
         },
         {
             Icon: <MailOutlineIcon sx={{ fontSize: 30 }} />,
-            Link: "/Mail",
+            Link: `/${Number(GetProject())}/Mail`,
             Target: "_self",
             Title: "Mail Marketing"
         },
         {
             Icon: <FormatListBulletedIcon sx={{ fontSize: 30 }} />,
-            Link: "/Forms",
+            Link: `/${Number(GetProject())}/Forms`,
             Target: "_self",
             Title: "Formulários"
         },
