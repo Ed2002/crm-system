@@ -15,6 +15,8 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { FormHandles } from "@unform/core/typings/types";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
+import { GetToken } from "../services/auth";
+import { enqueueSnackbar } from "notistack";
 
 export const Forms = () => {
     const formRef = useRef<FormHandles>(null);
@@ -36,11 +38,71 @@ export const Forms = () => {
       };
     
       const handleDelete = (form: FormTemplateType | null) => {
-        
+        if (form) {
+            API.delete(`${import.meta.env.VITE_API_URL}FormTemplate/${form.id}`, {
+              headers: {
+                Authorization: `Bearer ${GetToken()}`
+              }
+            })
+              .then(response => {
+                const { data } = response;
+                if (data.success) {
+                  enqueueSnackbar({
+                    message: "Formulário excluído!",
+                    variant: 'info'
+                  });
+                } else {
+                  enqueueSnackbar({
+                    message: data.menssages[0],
+                    variant: 'error'
+                  });
+                }
+              })
+              .catch(err => {
+                enqueueSnackbar({
+                  message: "Erro em nosso servidor. Tente novamente mais tarde!",
+                  variant: 'warning'
+                });
+              });
+          }
       };
       
       const handleStatusChange = (form: FormTemplateType | null, status: boolean) => {
-        
+        if (form) {
+            API.put(`${import.meta.env.VITE_API_URL}FormTemplate/${form.id}`, { status }, {
+              headers: {
+                Authorization: `Bearer ${GetToken()}`
+              }
+            })
+              .then(response => {
+                const { data } = response;
+                if (data.success) {
+                  enqueueSnackbar({
+                    message: "Status do formulário alterado!",
+                    variant: 'info'
+                  });
+                  SetForms(prevForms =>
+                    prevForms.map(c => {
+                      if (c.id === form.id) {
+                        return { ...c, status };
+                      }
+                      return c;
+                    })
+                  );
+                } else {
+                  enqueueSnackbar({
+                    message: data.menssages[0],
+                    variant: 'error'
+                  });
+                }
+              })
+              .catch(err => {
+                enqueueSnackbar({
+                  message: "Erro em nosso servidor. Tente novamente mais tarde!",
+                  variant: 'warning'
+                });
+              });
+          }
       };
 
 const convertStatus = (status: boolean) => {

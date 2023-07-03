@@ -85,11 +85,71 @@ export const Mail = () => {
   };
 
   const handleDelete = (mailTemplate: MailTemplateType | null) => {
-   
+    if (mailTemplate) {
+      API.delete(`${import.meta.env.VITE_API_URL}MailTemplate/${mailTemplate.id}`, {
+        headers: {
+          Authorization: `Bearer ${GetToken()}`
+        }
+      })
+        .then(response => {
+          const { data } = response;
+          if (data.success) {
+            enqueueSnackbar({
+              message: "Mail template excluído!",
+              variant: 'info'
+            });
+          } else {
+            enqueueSnackbar({
+              message: data.menssages[0],
+              variant: 'error'
+            });
+          }
+        })
+        .catch(err => {
+          enqueueSnackbar({
+            message: "Erro em nosso servidor. Tente novamente mais tarde!",
+            variant: 'warning'
+          });
+        });
+    }
   };
   
   const handleStatusChange = (mailTemplate: MailTemplateType | null, status: boolean) => {
-   
+    if (mailTemplate) {
+      API.put(`${import.meta.env.VITE_API_URL}MailTemplate/${mailTemplate.id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${GetToken()}`
+        }
+      })
+        .then(response => {
+          const { data } = response;
+          if (data.success) {
+            enqueueSnackbar({
+              message: "Status do template alterado!",
+              variant: 'info'
+            });
+            SetMailTemplates(prevMailTemplates =>
+              prevMailTemplates.map(c => {
+                if (c.id === mailTemplate.id) {
+                  return { ...c, status };
+                }
+                return c;
+              })
+            );
+          } else {
+            enqueueSnackbar({
+              message: data.menssages[0],
+              variant: 'error'
+            });
+          }
+        })
+        .catch(err => {
+          enqueueSnackbar({
+            message: "Erro em nosso servidor. Tente novamente mais tarde!",
+            variant: 'warning'
+          });
+        });
+    }
   };
 
   const handleCreate = async (data:MailTemplateType) => {
