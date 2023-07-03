@@ -27,8 +27,7 @@ export const Mail = () => {
       API.get(`${import.meta.env.VITE_API_URL}MailTemplate`,{
           params:{
               "PageSize": 10,
-              "Page":1,
-              "Id": Number(GetAuthToken()?.sub)
+              "Page": 1
           },
           headers:{
               Authorization: `Bearer ${GetToken()}`
