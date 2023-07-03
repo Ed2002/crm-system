@@ -8,12 +8,16 @@ import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import { enqueueSnackbar, useSnackbar } from 'notistack';
 import { SelectInput } from "../components/Forms/Select";
-import { Grid, IconButton, MenuItem } from "@mui/material";
+import { Grid, IconButton, MenuItem, Tooltip } from "@mui/material";
 import { Modal } from "../components/Modal";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { GetAuthToken, GetToken } from "../services/auth";
 import { ClientType } from "../types/ApiTypes";
 import * as Yup from 'yup';
+import { GetProject } from "../services/project";
+import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 export const Client = () => {
   const formRef = useRef<FormHandles>(null);
@@ -26,7 +30,7 @@ export const Client = () => {
         params:{
             "PageSize": 10,
             "Page":1,
-            "Id": Number(GetAuthToken()?.sub)
+            "IdProject": Number(GetProject())
         },
         headers:{
             Authorization: `Bearer ${GetToken()}`
@@ -35,8 +39,7 @@ export const Client = () => {
         let {data} = response;
         if(data.success)
         {
-            console.log(data.model.values[0]);
-            SetClients(data.model.values[0]);
+            SetClients(data.model.values);
             SetSearch(false);
         }
         else
@@ -54,6 +57,10 @@ export const Client = () => {
         })
     });
 }
+
+   useEffect(() => {
+    return () => callClientData();
+   },[])
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -79,8 +86,8 @@ export const Client = () => {
             abortEarly: false,
           });
 
-          data.status = 1;
-          data.idProject = 0;
+          data.status = 2;
+          data.idProject = Number(GetProject());
 
           console.log(data);
 
@@ -125,28 +132,63 @@ export const Client = () => {
     }
 }
 
+const convertStatus = (status:number) => {
+  switch(status)
+  {
+    case 1:
+      return (<Tooltip title="Atendido" placement="left">
+            <CheckOutlinedIcon color="success"/>
+          </Tooltip>);
+    case 2:
+      return (<Tooltip title="Em Atendimento" placement="left">
+            <HeadsetMicOutlinedIcon color="info"/>
+          </Tooltip>);
+    case 3:
+      return (<Tooltip title="Em Atendimento" placement="left">
+          <CancelOutlinedIcon color="error"/>
+        </Tooltip>);
+  }
+}
+
 const formSearchRef = useRef<FormHandles>(null);
 const formModalRef = useRef<FormHandles>(null);
 
-function handleSearch(data:ClientType) {
-
-  const filteredClients = Clients.filter((client) => {
-
-    if (data.name && !client.name.toLowerCase().includes(data.name.toLowerCase())) {
-      return false;
-    }
-    if (data.email && !client.email.toLowerCase().includes(data.email.toLowerCase())) {
-      return false;
-    }
-    if (data.status !== '' && data.status !== String(client.status)) {
-      return false;
-    }
-    return true;
+const handleSearch = (data:any) => {
+    API.get(`${import.meta.env.VITE_API_URL}ClientCrm`,{
+      params:{
+          "PageSize": 10,
+          "Page":1,
+          "IdProject": Number(GetProject()),
+          "Name": data.name,
+          "Email": data.email,
+          "Status": data.status
+      },
+      headers:{
+          Authorization: `Bearer ${GetToken()}`
+      }
+  }).then(response => {
+      let {data} = response;
+      if(data.success)
+      {
+          SetClients(data.model.values);
+          SetSearch(false);
+      }
+      else
+      {
+          enqueueSnackbar({
+              message: data.menssages[0],
+              variant: 'error'
+          })
+      }
+  })
+  .catch(err => {
+      enqueueSnackbar({
+          message: "Erro em nosso servidor tente mais tarde!",
+          variant: 'warning'
+      })
   });
-
-  SetClients(filteredClients);
 }
- 
+
   
   return (
     <Page Title="Clientes">
@@ -181,10 +223,10 @@ function handleSearch(data:ClientType) {
               variant="outlined"
               fullWidth
             >
-              <MenuItem value="">Todos</MenuItem>
-              <MenuItem value="true">Atendido</MenuItem>
-              <MenuItem value="false">Em Atendimento</MenuItem>
-              <MenuItem value="false">Não Atendido</MenuItem>
+              <MenuItem value={null}>Todos</MenuItem>
+              <MenuItem value={1}>Atendido</MenuItem>
+              <MenuItem value={2}>Em Atendimento</MenuItem>
+              <MenuItem value={3}>Não Atendido</MenuItem>
             </SelectInput>
           </Grid>
           <Grid item xs={1}>
@@ -282,12 +324,12 @@ function handleSearch(data:ClientType) {
           </tr>
         </THead>
         <TBody>
-          {Clients.map((client) => (
+          {Clients.map(client => (
             <Tr key={client.id}>
               <Td>{client.name}</Td>
               <Td>{client.email}</Td>
               <Td>{client.phone}</Td>
-              <Td>{client.status}</Td>
+              <Td>{convertStatus(client.status)}</Td>
               <Td>
                 <IconButton aria-label="delete" size="small">
                   <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
