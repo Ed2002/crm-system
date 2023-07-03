@@ -4,7 +4,7 @@ export type ClientType = {
     email: string;
     phone: string;
     document: string;
-    status: number;
+    status: boolean;
     idProject: number;
 }
 
