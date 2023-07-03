@@ -80,7 +80,7 @@ export const Client = () => {
     setModalOpen(false);
   };
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, client: ClientType) => {
     setAnchorEl(event.currentTarget);
     setSelectedClient(client); 
   };
@@ -418,9 +418,9 @@ const handleSearch = (data:any) => {
               <Td>{client.phone}</Td>
               <Td>{convertStatus(client.status)}</Td>
               <Td>
-                <IconButton aria-controls="options-menu" aria-haspopup="true" onClick={handleOpenMenu}>
-                  <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
-                </IconButton>
+              <IconButton aria-label="menu" size="small" onClick={(e) => handleOpenMenu(e, client)}>
+  <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
+</IconButton>
                 <Menu
                   id="options-menu"
                   anchorEl={anchorEl}

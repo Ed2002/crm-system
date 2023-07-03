@@ -23,12 +23,12 @@ export const Forms = () => {
     const [Pagina, SetPagina] = useState<number>(1);
     const [Total, SetTotal] = useState<number>(1);
     const [Search, SetSearch] = useState<boolean>(true);
-    const [selectedClient, setSelectedClient] = useState<FormTemplateType | null>(null);
+    const [selectedClient, setSelectedForm] = useState<FormTemplateType | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, form: FormTemplateType) => {
         setAnchorEl(event.currentTarget);
-        setSelectedClient(forms); // Armazena o cliente selecionado no estado
+        setSelectedForm(form); 
       };
       
       const handleCloseMenu = () => {
@@ -88,8 +88,8 @@ return (
             <Td>{form.data}</Td>
             <Td>{convertStatus(form.status)}</Td>
             <Td>
-                <IconButton aria-controls="options-menu" aria-haspopup="true" onClick={handleOpenMenu}>
-                  <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
+                <IconButton aria-label="menu" size="small" onClick={(e) => handleOpenMenu(e, form)}>
+                    <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
                 </IconButton>
                 <Menu
                   id="options-menu"

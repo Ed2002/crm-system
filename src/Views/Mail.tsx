@@ -26,7 +26,7 @@ export const Mail = () => {
   const [Search,SetSearch] = useState<boolean>(true);
   const [Pagina,SetPagina] = useState<number>(1);
   const [Total,SetTotal] = useState<number>(1);
-  const [selectedClient, setSelectedClient] = useState<MailTemplateType | null>(null);
+  const [selectedClient, setSelectedMailTemplate] = useState<MailTemplateType | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const callMailTemplateData = () => {
@@ -75,9 +75,9 @@ export const Mail = () => {
     SetModalTeste(false);
   };
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, mailTemplate: MailTemplateType) => {
     setAnchorEl(event.currentTarget);
-    setSelectedClient(mailTemplates); // Armazena o cliente selecionado no estado
+    setSelectedMailTemplate(mailTemplate); 
   };
   
   const handleCloseMenu = () => {
@@ -85,15 +85,11 @@ export const Mail = () => {
   };
 
   const handleDelete = (client: MailTemplateType | null) => {
-    if (client) {
-      // Lógica para excluir o cliente aqui
-    }
+   
   };
   
   const handleStatusChange = (client: MailTemplateType | null, status: boolean) => {
-    if (client) {
-      // Lógica para alterar o status do cliente aqui
-    }
+   
   };
 
   const handleCreate = async (data:MailTemplateType) => {
@@ -263,7 +259,7 @@ const handleSearch = (data:any) => {
               <Td>{mailTemplate.data}</Td>
               <Td>{convertStatus(mailTemplate.status)}</Td>
               <Td>
-                <IconButton aria-controls="options-menu" aria-haspopup="true" onClick={handleOpenMenu}>
+                <IconButton aria-label="menu" size="small" onClick={(e) => handleOpenMenu(e, mailTemplate)}>
                   <MoreVertIcon fontSize="inherit" style={{ color: "green" }} />
                 </IconButton>
                 <Menu
