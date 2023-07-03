@@ -16,16 +16,19 @@ import { SaveProject } from "../services/project";
 import { ProjectType } from "../types/ApiTypes";
 import { Loanding } from "../components/Loanding";
 import * as Yup from 'yup';
+import { InputCheckBox } from "../components/Forms/CheckBox";
 
 export const Project = () => {
   const formRef = useRef<FormHandles>(null);
+  const formUpdateRef = useRef<FormHandles>(null);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [Projects,SetProjects] = useState<Array<ProjectType>>([]);
   const [Search,SetSearch] = useState<boolean>(true);
   const [Project,SetProject] = useState<ProjectType>(null);
 
-  const [ModalTeste, SetModalTeste] = useState<boolean>(false);
+  const [ModalAdd, SetModalAdd] = useState<boolean>(false);
+  const [ModalUpdate, SetModalUpdate] = useState<boolean>(false);
   
   const handleSearch = () => {
     SetSearch(true);
@@ -126,10 +129,17 @@ export const Project = () => {
   },[]);
 
   const handleOpenModal = () => {
-    SetModalTeste(true);
+    SetModalAdd(true);
   };
   const handleCloseModal = () => {
-    SetModalTeste(false);
+    SetModalAdd(false);
+  };
+
+  const handleOpenModalUpdate = () => {
+    SetModalUpdate(true);
+  };
+  const handleCloseModalUpdate = () => {
+    SetModalUpdate(false);
   };
 
   const handleAccess = (IdProject:number) => {
@@ -137,11 +147,16 @@ export const Project = () => {
     navigate(`/${IdProject}/Home`);
   }
 
+  const handleConfig = (Project:ProjectType) => {
+    SetProject(Project);
+    handleOpenModalUpdate();
+  }
+
   return (
     <div style={{ height: '100vh' }}>
       <div className="backgroud-white">
 
-          <Modal Title="Cadastro de Projeto" Close={handleCloseModal} open={ModalTeste} maxWidth="md" fullWidth>
+          <Modal Title="Cadastro de Projeto" Close={handleCloseModal} open={ModalAdd} maxWidth="md" fullWidth>
             <Form ref={formRef} onSubmit={handleAdd}>
               <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={11}>
@@ -149,6 +164,26 @@ export const Project = () => {
                 </Grid>
                 <Grid item xs={11}>
                   <Input required name="description" label="Descrição" variant="outlined" fullWidth multiline rows={5}/>
+                </Grid>
+                <Grid item xs={11} style={{ marginBottom: '30px' }}>
+                  <LoadButton variant="contained" name="submit" title="Salvar" type="submit" fullWidth style={{height:"54px"}}/>
+                </Grid>
+              </Grid>
+            </Form>
+          </Modal>
+
+
+          <Modal Title="Atualizar Projeto" Close={handleCloseModalUpdate} open={ModalUpdate} maxWidth="md" fullWidth>
+            <Form ref={formUpdateRef} onSubmit={()=>{}}>
+              <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={11}>
+                  <Input required defaultValue={Project?.name} name="name" label="Nome" variant="outlined" fullWidth/>
+                </Grid>
+                <Grid item xs={11}>
+                  <Input required defaultValue={Project?.description} name="description" label="Descrição" variant="outlined" fullWidth multiline rows={5}/>
+                </Grid>
+                <Grid item xs={11}>
+                  <LoadButton variant="contained" name="status" title={Project?.status ? 'INATIVAR' : 'ATIVAR'} fullWidth type="button" />
                 </Grid>
                 <Grid item xs={11} style={{ marginBottom: '30px' }}>
                   <LoadButton variant="contained" name="submit" title="Salvar" type="submit" fullWidth style={{height:"54px"}}/>
@@ -187,7 +222,7 @@ export const Project = () => {
                         {Projects.length ? (
                           <Stack spacing={2} maxWidth="90%" direction="row" justifyContent="center" alignItems="baseline">
                             {Projects.map(item => (
-                              <CardProject ProjectId={item.id} ProjectName={item.name} FuncAccess={()=>{handleAccess(item.id)}}/>
+                              <CardProject ProjectId={item.id} ProjectName={item.name} FuncSettings={()=>{handleConfig(item.id)}} FuncAccess={()=>{handleAccess(item.id)}}/>
                             ))}
                           </Stack>
                         ) : (

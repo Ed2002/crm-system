@@ -26,7 +26,7 @@ export const Menu = ({ children }: IMenu) => {
             Icon: <PersonOutlineIcon sx={{ fontSize: 30 }} />,
             Link: `/${Number(GetProject())}/Clients`,
             Target: "_self",
-            Title: "Usuários"
+            Title: "Clientes"
         },
         {
             Icon: <AssessmentOutlinedIcon sx={{ fontSize: 30 }} />,
